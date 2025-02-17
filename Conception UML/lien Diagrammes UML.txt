@@ -1,0 +1,7 @@
+// lien de use case :
+
+https://lucid.app/lucidchart/135bb612-b170-418a-9679-6681e01625c0/edit?invitationId=inv_58a939cf-ee67-499c-b609-50d872c19525
+
+// lien de diagramme de class:
+
+https://lucid.app/lucidchart/d9d57bf0-6a09-484a-88a8-fa994b78aa5f/edit?invitationId=inv_7d7f2ae4-1ff0-4e5e-931c-94f3acbf74fa
