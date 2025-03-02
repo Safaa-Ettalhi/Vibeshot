@@ -1,6 +1,6 @@
 // lien de use case :
 
-https://lucid.app/lucidchart/135bb612-b170-418a-9679-6681e01625c0/edit?invitationId=inv_58a939cf-ee67-499c-b609-50d872c19525
+https://drive.google.com/file/d/1VeyOr71CIDafXW03a_-1YqAZQIaqzgaz/view?usp=sharing
 
 // lien de diagramme de class:
 
