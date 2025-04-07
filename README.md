@@ -80,12 +80,12 @@ Le projet sera officiellement lancé en **mai 2025**.
 ## Technologies utilisées
 
 ### 1. Frontend
-- **React.js** : Pour une interface utilisateur dynamique et réactive.
-- **Tailwind CSS** : Pour un design responsive et moderne.
-- **Sass** : Préprocesseur CSS permettant une gestion plus flexible et modulaire des styles, avec des variables, des mixins, des fonctions, et des imbrications, facilitant ainsi l'évolutivité du design.
+- **Blade (Laravel)** : Utilisation des templates Blade pour créer des vues dynamiques et bien structurées.
+- **Tailwind CSS** : Pour une structure design rapide, moderne et responsive.
+- **CSS** : Pour styliser certains éléments spécifiques ou personnalisés.
 
 ### 2. Backend
-- **Laravel** : Framework PHP pour la gestion du backend et des API.
+- **Laravel** : Framework php pour gérer la logique métier, les routes, l’authentification, les relations, etc.
 - **MySQL** : Base de données relationnelle pour stocker les données utilisateur et les publications.
 
 ### 3. Outils de développement
