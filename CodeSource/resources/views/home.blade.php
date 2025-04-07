@@ -21,7 +21,7 @@
                         </div>
                         
                         <div id="preview-container" class="mb-3 grid grid-cols-2 md:grid-cols-3 gap-2 hidden">
-                            <!-- Les aperçus d'images seront ajoutés ici -->
+
                         </div>
                         
                         <div class="flex justify-between items-center">
@@ -62,7 +62,7 @@
                         <a href="{{ route('profile.show', $post->user->username) }}" class="flex items-center gap-3 group">
                             <div class="relative">
                                 <img src="{{ $post->user->profile_image ? asset('storage/' . $post->user->profile_image) : asset('images/default-avatar.svg') }}" alt="{{ $post->user->name }}" class="w-10 h-10 rounded-full object-cover border-2 border-transparent group-hover:border-blue-500 transition-all">
-                                <!-- <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-gray-900"></div> -->
+                               
                             </div>
                             <div>
                                 <div class="flex items-center flex-wrap gap-1">
@@ -75,7 +75,7 @@
                         </a>
                         
                           
-    <!-- Menu d'options pour les posts de l'utilisateur connecté -->
+    <!-- Menu d'options pour les posts  -->
     @if($post->user_id === auth()->id())
         <div class="relative post-menu">
             <button class="text-gray-400 hover:text-white p-1 rounded-full hover:bg-gray-800/50 transition-colors post-menu-toggle">
@@ -101,7 +101,7 @@
                         
                         @if($post->images->count() > 1)
                             <div class="px-4 pt-1 pb-2">
-                                <!-- Container pour les images côte à côte avec défilement horizontal -->
+                                <!-- container image lune acoter de lautre -->
                                 <div class="flex space-x-4 overflow-x-auto pb-2 scrollbar-hide">
                                     @foreach($post->images as $image)
                                         <div class="flex-none w-[48%] sm:w-[50%] rounded-xl overflow-hidden">
@@ -226,7 +226,7 @@
                             <a href="{{ route('profile.show', $user->username) }}" class="flex items-center gap-3">
                                 <div class="relative">
                                     <img src="{{ $user->profile_image ? asset('storage/' . $user->profile_image) : asset('images/default-avatar.svg') }}" alt="{{ $user->name }}" class="w-10 h-10 rounded-full object-cover border-2 border-transparent hover:border-blue-500 transition-all">
-                                    <!-- <div class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-gray-900"></div> -->
+                                  
                                 </div>
                                 <div>
                                     <div class="font-semibold text-white">{{ $user->name }}</div>
