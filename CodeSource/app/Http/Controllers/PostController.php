@@ -33,35 +33,35 @@ class PostController extends Controller
             'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:5120',
         ]);
 
-        // Vérifier si des images ont été téléchargées
+      
         if (!$request->hasFile('images')) {
             return redirect()->back()->with('error', 'Please upload at least one image.');
         }
 
-        // Traiter la première image d'abord pour obtenir image_path
+       
         $firstImage = $request->file('images')[0];
         $firstImagePath = $firstImage->store('posts', 'public');
 
-        // Créer le post avec l'image_path de la première image
+        
         $post = new Post([
             'user_id' => auth()->id(),
             'caption' => $request->caption,
-            'image_path' => $firstImagePath, // Utiliser le chemin de la première image
+            'image_path' => $firstImagePath, 
         ]);
 
         $post->save();
 
-        // Traiter toutes les images, y compris la première
+        
         $order = 0;
         foreach ($request->file('images') as $image) {
-            // Si c'est la première image, utiliser le chemin déjà stocké
+            
             if ($order === 0) {
                 $path = $firstImagePath;
             } else {
                 $path = $image->store('posts', 'public');
             }
             
-            // Créer l'entrée d'image
+           
             $postImage = new PostImage([
                 'post_id' => $post->id,
                 'image_path' => $path,
@@ -87,12 +87,12 @@ class PostController extends Controller
             abort(403);
         }
 
-        // Supprimer les images du stockage
+       
         if ($post->image_path) {
             Storage::disk('public')->delete($post->image_path);
         }
         
-        // Supprimer toutes les images associées
+        
         foreach ($post->images as $image) {
             Storage::disk('public')->delete($image->image_path);
         }
