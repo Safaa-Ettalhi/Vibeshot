@@ -19,4 +19,10 @@ class PostImage extends Model
     {
         return $this->belongsTo(Post::class);
     }
+    public function isUsedByOtherPosts()
+    {
+        return static::where('image_path', $this->image_path)
+            ->where('id', '!=', $this->id)
+            ->exists();
+    }
 }
