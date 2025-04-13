@@ -75,20 +75,22 @@
                         </a>
                         
                         @if($post->user_id === auth()->id())
-                            <div class="relative post-menu">
-                                <button class="text-gray-400 hover:text-white p-1 rounded-full hover:bg-gray-800/50 transition-colors post-menu-toggle">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-horizontal"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
-                                </button>
-                                <div class="absolute right-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg z-10 border border-gray-700 overflow-hidden post-menu-dropdown hidden">
-                                    <a href="{{ route('posts.edit', $post) }}" class="block w-full text-left px-4 py-2 text-sm text-white hover:bg-gray-700">Edit Post</a>
-                                    <form action="{{ route('posts.destroy', $post) }}" method="POST">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-700">Delete Post</button>
-                                    </form>
-                                </div>
-                            </div>
-                        @endif
+    <div class="relative post-menu">
+        <button class="text-gray-400 hover:text-white p-1 rounded-full hover:bg-gray-800/50 transition-colors post-menu-toggle">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-horizontal"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
+        </button>
+        <div class="absolute right-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg z-10 border border-gray-700 overflow-hidden post-menu-dropdown hidden">
+            @if(!$post->original_post_id)
+                <a href="{{ route('posts.edit', $post) }}" class="block w-full text-left px-4 py-2 text-sm text-white hover:bg-gray-700">Edit Post</a>
+            @endif
+            <form action="{{ route('posts.destroy', $post) }}" method="POST">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-700">Delete Post</button>
+            </form>
+        </div>
+    </div>
+@endif
                     </div>
                     
                     <div class="p-0">
