@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
-use App\Models\PostImage; // Importation correcte de la classe PostImage
+use App\Models\PostImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
 {
@@ -76,9 +77,12 @@ class PostController extends Controller
 
     public function edit(Post $post)
     {
-        
+      
         if ($post->user_id !== auth()->id()) {
             abort(403);
+        }
+        if ($post->original_post_id) {
+            return redirect()->back()->with('error', 'Shared posts cannot be edited.');
         }
         
         return view('posts.edit', compact('post'));
@@ -86,11 +90,12 @@ class PostController extends Controller
 
     public function update(Request $request, Post $post)
     {
-       
         if ($post->user_id !== auth()->id()) {
             abort(403);
         }
-        
+        if ($post->original_post_id) {
+            return redirect()->back()->with('error', 'Shared posts cannot be updated.');
+        }
 
         Log::info('Update Post Request', [
             'post_id' => $post->id,
@@ -101,13 +106,12 @@ class PostController extends Controller
         $request->validate([
             'caption' => 'nullable|string|max:1000',
         ]);
-        
-        
         $post->caption = $request->caption;
         $post->save();
         
+        $imagesModified = $request->hasFile('images');
 
-        if ($request->hasFile('images')) {
+        if ($imagesModified) {
             $order = $post->images->count(); 
             
             foreach ($request->file('images') as $image) {
@@ -123,6 +127,33 @@ class PostController extends Controller
             }
         }
         
+        if ($post->shares->count() > 0) {
+            foreach ($post->shares as $sharedPost) {
+                
+                $sharedPost->caption = $post->caption;
+                $sharedPost->image_path = $post->image_path;
+                $sharedPost->save();
+
+                if ($imagesModified) {
+                   
+                    PostImage::where('post_id', $sharedPost->id)->delete();
+
+                    $originalImages = $post->fresh()->images; 
+                    $orderShared = 0;
+                    
+                    foreach ($originalImages as $originalImage) {
+                        $postImage = new PostImage([
+                            'post_id' => $sharedPost->id,
+                            'image_path' => $originalImage->image_path,
+                            'order' => $orderShared++
+                        ]);
+                        
+                        $postImage->save();
+                    }
+                }
+            }
+        }
+        
         return redirect()->route('posts.show', $post)->with('success', 'Post updated successfully!');
     }
 
@@ -131,12 +162,36 @@ class PostController extends Controller
         if ($image->post->user_id !== auth()->id()) {
             abort(403);
         }
+        if ($image->post->original_post_id) {
+            return redirect()->back()->with('error', 'Images from shared posts cannot be removed.');
+        }
+        $post = $image->post;
+        $imagePath = $image->image_path;
+        $isUsedElsewhere = PostImage::where('image_path', $imagePath)
+            ->where('id', '!=', $image->id)
+            ->exists();
         
-        
-        Storage::disk('public')->delete($image->image_path);
-        
-       
+        if (!$isUsedElsewhere) {
+            Storage::disk('public')->delete($imagePath);
+        }
         $image->delete();
+
+        if ($post->shares->count() > 0) {
+            foreach ($post->shares as $sharedPost) {
+                PostImage::where('post_id', $sharedPost->id)->delete();
+                $originalImages = $post->fresh()->images;
+                $orderShared = 0;
+                foreach ($originalImages as $originalImage) {
+                    $postImage = new PostImage([
+                        'post_id' => $sharedPost->id,
+                        'image_path' => $originalImage->image_path,
+                        'order' => $orderShared++
+                    ]);
+                    
+                    $postImage->save();
+                }
+            }
+        }
         
         return redirect()->back()->with('success', 'Image removed successfully!');
     }
@@ -146,23 +201,59 @@ class PostController extends Controller
         if ($post->user_id !== auth()->id()) {
             abort(403);
         }
-
-        if ($post->image_path) {
-            Storage::disk('public')->delete($post->image_path);
-        }
+        DB::beginTransaction();
         
-        foreach ($post->images as $image) {
-            Storage::disk('public')->delete($image->image_path);
+        try {
+            if ($post->shares->count() > 0) {
+                foreach ($post->shares as $sharedPost) {
+                    
+                    foreach ($sharedPost->images as $image) {
+                        $image->delete();
+                    }
+                    
+                    $sharedPost->delete();
+                }
+            }
+            if ($post->image_path) {
+               
+                $isMainImageUsed = Post::where('image_path', $post->image_path)
+                    ->where('id', '!=', $post->id)
+                    ->exists();
+                
+                if (!$isMainImageUsed) {
+                    Storage::disk('public')->delete($post->image_path);
+                }
+            }
+            
+           
+            foreach ($post->images as $image) {
+                
+                $isImageUsed = PostImage::where('image_path', $image->image_path)
+                    ->where('id', '!=', $image->id)
+                    ->exists();
+                
+                if (!$isImageUsed) {
+                    Storage::disk('public')->delete($image->image_path);
+                }
+                
+                $image->delete();
+            }
+            
+            $post->delete();
+            
+            DB::commit();
+            
+            return redirect()->route('home')->with('success', 'Post and all shared posts deleted successfully!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error deleting post: ' . $e->getMessage());
+            
+            return redirect()->back()->with('error', 'An error occurred while deleting the post.');
         }
-
-        $post->delete();
-
-        return redirect()->route('home')->with('success', 'Post deleted successfully!');
     }
     
     public function share(Post $post)
     {
-
         $sharedPost = new Post([
             'user_id' => auth()->id(),
             'caption' =>  ($post->caption ?? ''),
@@ -171,7 +262,6 @@ class PostController extends Controller
         ]);
         
         $sharedPost->save();
-        
         
         if ($post->images->count() > 0) {
             $order = 0;
