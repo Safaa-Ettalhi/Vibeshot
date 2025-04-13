@@ -33,7 +33,13 @@
         @forelse($bookmarkedPosts as $bookmark)
             <div class="relative w-[280px] h-[280px] rounded-xl overflow-hidden snap-start">
                 <a href="{{ route('posts.show', $bookmark->post) }}">
-                    <img src="{{ asset('storage/' . $bookmark->post->image_path) }}" alt="Saved post" class="w-full h-full object-cover">
+                    <img src="{{ 
+                        $bookmark->post->images->count() > 0 
+                            ? asset('storage/' . $bookmark->post->images->first()->image_path) 
+                            : ($bookmark->post->image_path 
+                                ? asset('storage/' . $bookmark->post->image_path) 
+                                : asset('images/default-post-image.svg'))
+                    }}" alt="Saved post" class="w-full h-full object-cover">
                 </a>
                 
               
@@ -150,4 +156,3 @@
 </script>
 @endpush
 @endsection
-
