@@ -224,7 +224,7 @@
                 
                 <a href="" class="publication-action">
                     <i data-feather="repeat"></i>
-                    <span>{{ $post->reposts_count ?? 0 }}</span>
+                    <span>{{ $post->shares->count() }}</span>
                 </a>
                 
                 @if($post->isBookmarkedBy(auth()->user()))
@@ -306,21 +306,15 @@ document.addEventListener('DOMContentLoaded', function() {
     if (typeof feather !== 'undefined') {
         feather.replace();
     }
-    
-    // Fonction pour naviguer dans les images
     function navigateImages(container, direction) {
         const imagesScroll = container.querySelector('.publication-images-scroll');
         const totalImages = parseInt(imagesScroll.getAttribute('data-total-images'));
         let currentIndex = parseInt(imagesScroll.getAttribute('data-current-image'));
-        
-        // Calculer le nouvel index
         if (direction === 'next') {
             currentIndex = (currentIndex + 1) % totalImages;
         } else {
             currentIndex = (currentIndex - 1 + totalImages) % totalImages;
         }
-        
-        // Mettre à jour l'attribut de l'index courant
         imagesScroll.setAttribute('data-current-image', currentIndex);
         
 
