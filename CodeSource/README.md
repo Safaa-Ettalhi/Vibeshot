@@ -1,66 +1,121 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# VibeShot
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+**VibeShot** est une plateforme de réseautage social innovante qui combine simplicité, beauté et partage de bons moments à travers des images et des vidéos. Ce projet vise à offrir une expérience élégante et organisée aux utilisateurs tout en partageant leurs souvenirs.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🚀 Présentation du projet
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### 🎯 Contexte
+VibeShot est un espace dédié aux jeunes actifs, où ils peuvent publier et explorer du contenu visuel captivant, tout en interagissant avec d'autres utilisateurs dans un environnement épuré.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 🌟 Objectifs
+- Organiser les publications de manière stylée.
+- Satisfaire les utilisateurs grâce à une expérience fluide.
+- Partager facilement des souvenirs.
 
-## Learning Laravel
+### 📱 Périmètre
+Le site sera entièrement **Responsive Design**, garantissant une expérience utilisateur optimale sur tous les appareils.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## 🎯 Cibles
+- Âge : 13 ans et plus.
+- Public : Utilisateurs du monde entier.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+## 🔍 Concurrence
+Les plateformes concurrentes principales sont :
+- **Instagram**
+- **Pinterest**
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+## 🎨 Charte graphique et ergonomique
+![Charte](images/shart.png)
+### 🖼️ Logo
+![Logo VibeShot](images/logo.png)
+![VibeShot](images/vibs.png)
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### 🖋️ Typographie
+Les polices utilisées sont :
+- **Inter**
+- **Poppins**
+- **Roboto**
 
-## Contributing
+### 🎨 Couleurs  
+- Fond : `#000`  
+- Texte : `#D9D9D9`  
+- Boutons : `#38b6ff`
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+## 🕒 Délais de réalisation
+Le projet sera officiellement lancé en **mai 2025**.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+## ⚙️ Spécifications fonctionnelles
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+1. Poster des images et vidéos.
+2. Partager des articles.
+3. Réagir aux publications (likes, commentaires).
+4. Suivre d'autres utilisateurs.
+5. Navigation dans le fil d'actualité.
+6. Tableau de bord personnalisé.
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 📋 Description fonctionnelle
+
+- **Fil d'actualité (Feed)** : Ajouter de nouveaux posts et afficher des posts pertinents.
+- **Profil** : Voir et gérer les informations personnelles et publications (modifier, ajouter, supprimer).
+- **Navigation** : Rechercher des utilisateurs, publications, etc.
+- **Notifications** : Recevoir des alertes importantes (likes, commentaires, etc.).
+- **Favoris (Bookmarks)** : Voir les posts enregistrés par l'utilisateur.
+- **Paramètres** : Gérer le compte (déconnexion, suppression du compte).
+
+---
+## Technologies utilisées
+
+### 1. Frontend
+- **Blade (Laravel)** : Utilisation des templates Blade pour créer des vues dynamiques et bien structurées.
+- **Tailwind CSS** : Pour une structure design rapide, moderne et responsive.
+- **CSS** : Pour styliser certains éléments spécifiques ou personnalisés.
+
+### 2. Backend
+- **Laravel** : Framework php pour gérer la logique métier, les routes, l’authentification, les relations, etc.
+- **MySQL** : Base de données relationnelle pour stocker les données utilisateur et les publications.
+
+### 3. Outils de développement
+- **Git** : Système de contrôle de version pour suivre et gérer les modifications du code.
+- **GitHub** : Plateforme de gestion de code source en ligne pour la collaboration et le déploiement du projet.
+- **Jira** : Outil de gestion de projet pour la planification, le suivi des tâches et la gestion des workflows.
+
+---
+
+## Timeline du projet VibeShot
+
+#### **Janvier 2025 : Planification et Cahier des charges**
+- **Dernière semaine** : Utilisation de **Jira** pour la planification des tâches et suivi du projet et Réalisation du cahier des charges.
+
+#### **Février 2025 : Conception et maquettage**
+- **Semaine 1** : Conception UML (diagrammes de cas d’utilisation, diagrammes de classe).
+- **Semaine 2** : Création des maquettes.
+- **Semaine 3-4** : Développement de la base de données, modélisation et implémentation des schémas de données.
+
+#### **Mars 2025 : Développement frontend et backend**
+- **Semaine 1-3** : Développement du frontend.
+- **Semaine 3-4** : Développement du backend.
+
+#### **Avril 2025 : Finalisation et tests**
+- **Semaine 1-3** : Finalisation du développement frontend et backend.
+- **Semaine 4** : Tests de l’application.
+
+#### **Mai 2025 : Lancement**
+- Lancement officiel de la plateforme.
+
+---
+
+## Réalisé par Safaa Ettalhi
