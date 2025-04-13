@@ -74,24 +74,21 @@
                             </div>
                         </a>
                         
-                          
-    <!-- Menu d'options pour les posts  -->
-    @if($post->user_id === auth()->id())
-        <div class="relative post-menu">
-            <button class="text-gray-400 hover:text-white p-1 rounded-full hover:bg-gray-800/50 transition-colors post-menu-toggle">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-horizontal"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
-            </button>
-            <div class="absolute right-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg z-10 border border-gray-700 overflow-hidden post-menu-dropdown hidden">
-                <a href="" class="block w-full text-left px-4 py-2 text-sm text-white hover:bg-gray-700">Edit Post</a>
-                <form action="{{ route('posts.destroy', $post) }}" method="POST">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-700">Delete Post</button>
-                </form>
-            </div>
-        </div>
-    @endif
-
+                        @if($post->user_id === auth()->id())
+                            <div class="relative post-menu">
+                                <button class="text-gray-400 hover:text-white p-1 rounded-full hover:bg-gray-800/50 transition-colors post-menu-toggle">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-horizontal"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
+                                </button>
+                                <div class="absolute right-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg z-10 border border-gray-700 overflow-hidden post-menu-dropdown hidden">
+                                    <a href="{{ route('posts.edit', $post) }}" class="block w-full text-left px-4 py-2 text-sm text-white hover:bg-gray-700">Edit Post</a>
+                                    <form action="{{ route('posts.destroy', $post) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-700">Delete Post</button>
+                                    </form>
+                                </div>
+                            </div>
+                        @endif
                     </div>
                     
                     <div class="p-0">
@@ -125,56 +122,61 @@
                         @endif
                     </div>
                     
-                    <div class="p-4 border-t border-gray-800/50">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-6">
-                                @if($post->isLikedBy(auth()->user()))
-                                    <form action="{{ route('likes.destroy', $post) }}" method="POST">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="flex items-center gap-1.5 text-red-500 hover:text-red-400 transition-colors group">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart group-hover:scale-110 transition-transform"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
-                                            <span class="text-sm font-medium">{{ $post->likes->count() }}</span>
-                                        </button>
-                                    </form>
-                                @else
-                                    <form action="{{ route('likes.store', $post) }}" method="POST">
-                                        @csrf
-                                        <button type="submit" class="flex items-center gap-1.5 text-gray-400 hover:text-red-500 transition-colors group">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart group-hover:scale-110 transition-transform"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
-                                            <span class="text-sm font-medium">{{ $post->likes->count() }}</span>
-                                        </button>
-                                    </form>
-                                @endif
-                                
-                                <a href="{{ route('posts.show', $post) }}" class="flex items-center gap-1.5 text-gray-400 hover:text-blue-500 transition-colors group">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-message-circle group-hover:scale-110 transition-transform"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
-                                    <span class="text-sm font-medium">{{ $post->comments->count() }}</span>
-                                </a>
-                                
-                                <button type="button" class="flex items-center gap-1.5 text-gray-400 hover:text-green-500 transition-colors group share-button" data-post-id="{{ $post->id }}">
-                                    <i data-feather="repeat"  width="18" height="18"></i>
-                                </button>
-                            </div>
-                            
-                            @if($post->isBookmarkedBy(auth()->user()))
-                                <form action="{{ route('bookmarks.destroy', $post) }}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-blue-500 hover:text-blue-400 transition-colors group">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bookmark group-hover:scale-110 transition-transform"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-                                    </button>
-                                </form>
-                            @else
-                                <form action="{{ route('bookmarks.store', $post) }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="text-gray-400 hover:text-blue-500 transition-colors group">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bookmark group-hover:scale-110 transition-transform"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-                                    </button>
-                                </form>
-                            @endif
-                        </div>
-                    </div>
+
+<div class="p-4 border-t border-gray-800/50">
+    <div class="flex items-center justify-between">
+        <div class="flex items-center gap-6">
+            @if($post->isLikedBy(auth()->user()))
+                <form action="{{ route('likes.destroy', $post) }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="flex items-center gap-1.5 text-red-500 hover:text-red-400 transition-colors group">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart group-hover:scale-110 transition-transform"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                        <span class="text-sm font-medium">{{ $post->likes->count() }}</span>
+                    </button>
+                </form>
+            @else
+                <form action="{{ route('likes.store', $post) }}" method="POST">
+                    @csrf
+                    <button type="submit" class="flex items-center gap-1.5 text-gray-400 hover:text-red-500 transition-colors group">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart group-hover:scale-110 transition-transform"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                        <span class="text-sm font-medium">{{ $post->likes->count() }}</span>
+                    </button>
+                </form>
+            @endif
+            
+            <a href="{{ route('posts.show', $post) }}" class="flex items-center gap-1.5 text-gray-400 hover:text-blue-500 transition-colors group">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-message-circle group-hover:scale-110 transition-transform"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                <span class="text-sm font-medium">{{ $post->comments->count() }}</span>
+            </a>
+            
+            <form action="{{ route('posts.share', $post) }}" method="POST">
+                @csrf
+                <button type="submit" class="flex items-center gap-1.5 text-gray-400 hover:text-green-500 transition-colors group {{ $post->isSharedBy(auth()->user()) ? 'text-green-500' : '' }}">
+                    <i data-feather="repeat" width="18" height="18" class="{{ $post->isSharedBy(auth()->user()) ? 'fill-current' : '' }}"></i>
+                    <span class="text-sm font-medium">{{ $post->shares->count() }}</span>
+                </button>
+            </form>
+            
+            @if($post->isBookmarkedBy(auth()->user()))
+                <form action="{{ route('bookmarks.destroy', $post) }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="flex items-center gap-1.5 text-blue-500 hover:text-blue-400 transition-colors group">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bookmark group-hover:scale-110 transition-transform"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+                    </button>
+                </form>
+            @else
+                <form action="{{ route('bookmarks.store', $post) }}" method="POST">
+                    @csrf
+                    <button type="submit" class="flex items-center gap-1.5 text-gray-400 hover:text-blue-500 transition-colors group">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bookmark group-hover:scale-110 transition-transform"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+                    </button>
+                </form>
+            @endif
+        </div>
+    </div>
+</div>
                 </div>
             @endforeach
             
@@ -184,32 +186,38 @@
         </div>
         
         <div class="w-full md:w-1/3">
-            <!-- Search Input -->
+            
             <div class="relative mb-6">
                 <input type="text" placeholder="Search" class="w-full bg-gray-800/70 border border-gray-700 rounded-full py-2 px-4 pl-10 text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
             </div>
             
-            <!-- Trending Section -->
+
             <div class="bg-gray-900/50 rounded-xl overflow-hidden border border-gray-800 shadow-lg mb-6 backdrop-blur-sm">
                 <div class="p-4 border-b border-gray-800/50 flex items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trending-up text-red-500 mr-2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
                     <h3 class="font-semibold text-white">Today's Trending</h3>
                 </div>
                 <div class="p-2">
-                    @foreach($trendingPosts as $trending)
-                        <a href="{{ route('posts.show', $trending) }}" class="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-800/50 mb-2 transition-colors">
-                            <img src="{{ asset('storage/' . $trending->image_path) }}" alt="Trending post" class="w-12 h-12 rounded-lg object-cover shadow-sm">
-                            <div class="flex-1 min-w-0">
-                                <div class="font-semibold text-white truncate">{{ Str::limit($trending->caption, 30) }}</div>
-                                <div class="text-xs text-gray-400 flex items-center gap-1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
-                                    {{ $trending->likes_count }} likes
-                                </div>
-                            </div>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right text-gray-500"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                        </a>
-                    @endforeach
+                @foreach($trendingPosts as $trending)
+    <a href="{{ route('posts.show', $trending) }}" class="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-800/50 mb-2 transition-colors">
+        <img src="{{ 
+            $trending->images->count() > 0 
+                ? asset('storage/' . $trending->images->random()->image_path) 
+                : ($trending->image_path 
+                    ? asset('storage/' . $trending->image_path) 
+                    : asset('images/default-post-image.svg')) 
+        }}" alt="Trending post" class="w-12 h-12 rounded-lg object-cover shadow-sm">
+        <div class="flex-1 min-w-0">
+            <div class="font-semibold text-white truncate">{{ Str::limit($trending->caption, 30) }}</div>
+            <div class="text-xs text-gray-400 flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                {{ $trending->likes_count }} likes
+            </div>
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right text-gray-500"><polyline points="9 18 15 12 9 6"></polyline></svg>
+    </a>
+@endforeach
                     
                     <a href="#" class="text-sm text-blue-500 hover:text-blue-400 transition-colors block text-center py-2 rounded-lg hover:bg-gray-800/30">See All</a>
                 </div>
@@ -251,15 +259,14 @@
 </div>
 
 <style>
-/* Pour cacher la barre de défilement sur tous les navigateurs */
+
 .scrollbar-hide {
-  /* Pour Firefox */
+
   scrollbar-width: none;
-  /* Pour IE et Edge */
+
   -ms-overflow-style: none;
 }
 
-/* Pour Chrome, Safari et Opera */
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
   width: 0;
@@ -269,27 +276,24 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Gestion du menu déroulant pour les posts
+    
     const toggleButtons = document.querySelectorAll('.post-menu-toggle');
     
     toggleButtons.forEach(button => {
         button.addEventListener('click', function(e) {
             e.stopPropagation();
             const dropdown = this.nextElementSibling;
-            
-            // Fermer tous les autres menus
+
             document.querySelectorAll('.post-menu-dropdown').forEach(menu => {
                 if (menu !== dropdown) {
                     menu.classList.add('hidden');
                 }
             });
-            
-            // Basculer le menu actuel
+
             dropdown.classList.toggle('hidden');
         });
     });
-    
-    // Fermer le menu quand on clique ailleurs
+
     document.addEventListener('click', function(e) {
         if (!e.target.closest('.post-menu')) {
             document.querySelectorAll('.post-menu-dropdown').forEach(menu => {
@@ -297,10 +301,40 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     });
-    
-    // Initialiser les icônes feather
+
     if (typeof feather !== 'undefined') {
         feather.replace();
+    }
+    
+    const imageUpload = document.getElementById('image-upload');
+    const previewContainer = document.getElementById('preview-container');
+    
+    if (imageUpload) {
+        imageUpload.addEventListener('change', function() {
+            previewContainer.innerHTML = '';
+            previewContainer.classList.remove('hidden');
+            
+            for (let i = 0; i < this.files.length; i++) {
+                const file = this.files[i];
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        const previewDiv = document.createElement('div');
+                        previewDiv.className = 'relative';
+                        
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.className = 'w-full h-32 object-cover rounded-lg';
+                        
+                        previewDiv.appendChild(img);
+                        previewContainer.appendChild(previewDiv);
+                    }
+                    
+                    reader.readAsDataURL(file);
+                }
+            }
+        });
     }
 });
 </script>
