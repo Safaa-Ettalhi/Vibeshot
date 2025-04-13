@@ -13,6 +13,7 @@ class Post extends Model
         'user_id',
         'caption',
         'image_path',
+        'original_post_id',
     ];
 
     public function user()
@@ -39,6 +40,16 @@ class Post extends Model
     {
         return $this->hasMany(PostImage::class)->orderBy('order');
     }
+    
+    public function originalPost()
+    {
+        return $this->belongsTo(Post::class, 'original_post_id');
+    }
+    
+    public function shares()
+    {
+        return $this->hasMany(Post::class, 'original_post_id');
+    }
 
     public function isLikedBy($user)
     {
@@ -48,5 +59,18 @@ class Post extends Model
     public function isBookmarkedBy($user)
     {
         return $this->bookmarks->contains('user_id', $user->id);
+    }
+    
+    public function isSharedBy($user)
+    {
+        return $this->shares->contains('user_id', $user->id);
+    }
+    
+  
+    public function isMainImageUsedByOtherPosts()
+    {
+        return static::where('image_path', $this->image_path)
+            ->where('id', '!=', $this->id)
+            ->exists();
     }
 }
