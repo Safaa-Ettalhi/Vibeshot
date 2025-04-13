@@ -146,20 +146,22 @@
                 </div>
                 
                 @if($user->id === auth()->id())
-                    <div class="publication-menu">
-                        <button class="publication-menu-btn">
-                            <i data-feather="more-horizontal"></i>
-                        </button>
-                        <div class="publication-menu-dropdown hidden">
-                            <form action="{{ route('posts.destroy', $post) }}" method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="publication-menu-item">Delete Post</button>
-                            </form>
-                            <a href="" class="publication-menu-item edit-post">Update Post</a>
-                        </div>
-                    </div>
-                @endif
+    <div class="publication-menu">
+        <button class="publication-menu-btn">
+            <i data-feather="more-horizontal"></i>
+        </button>
+        <div class="publication-menu-dropdown hidden">
+            <form action="{{ route('posts.destroy', $post) }}" method="POST">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="publication-menu-item">Delete Post</button>
+            </form>
+            @if(!$post->original_post_id)
+                <a href="{{ route('posts.edit', $post) }}" class="publication-menu-item edit-post">Update Post</a>
+            @endif
+        </div>
+    </div>
+@endif
             </div>
             
             @if($post->caption)
