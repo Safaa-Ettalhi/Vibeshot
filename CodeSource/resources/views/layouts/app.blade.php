@@ -6,18 +6,11 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'VibeShot') }}</title>
-
-    <!-- Fonts -->
-    <!-- <link rel="preconnect" href="https://fonts.googleapis.com"> -->
-    <!-- <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Styles -->
     <link href="{{ asset('css/vibeshot.css') }}" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Scripts -->
     <script src="https://unpkg.com/feather-icons"></script>
-    
 </head>
 <body class="">
     @auth
@@ -107,16 +100,27 @@
     @endauth
     
     <div class="{{ auth()->check() ? 'main-content' : '' }} ">
+        <!-- Affichage des messages flash -->
+        @if(session('success'))
+            <div class="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 flash-message">
+                {{ session('success') }}
+            </div>
+        @endif
+        
+        @if(session('error'))
+            <div class="fixed top-4 right-4 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 flash-message">
+                {{ session('error') }}
+            </div>
+        @endif
+        
         @yield('content')
     </div>
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             feather.replace({
-                'stroke-width': 1.5 // Réduit l'épaisseur des icônes pour correspondre aux maquettes
+                'stroke-width': 1.5
             });
-            
-            // Toggle dropdown menus
             const dropdownButtons = document.querySelectorAll('.btn-icon');
             dropdownButtons.forEach(button => {
                 button.addEventListener('click', function() {
@@ -126,8 +130,6 @@
                     }
                 });
             });
-            
-            // Close dropdowns when clicking outside
             document.addEventListener('click', function(event) {
                 if (!event.target.closest('.btn-icon')) {
                     document.querySelectorAll('.absolute').forEach(dropdown => {
@@ -137,76 +139,17 @@
                     });
                 }
             });
-            
-            // Navigation entre les images dans les posts
-            const imageContainers = document.querySelectorAll('.post-image-container');
-            imageContainers.forEach(container => {
-                if (container.children.length > 1) {
-                    // Créer les boutons de navigation
-                    const prevBtn = document.createElement('button');
-                    prevBtn.className = 'absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 rounded-full p-2';
-                    prevBtn.innerHTML = '<i data-feather="chevron-left" class="w-5 h-5 text-white"></i>';
-                    
-                    const nextBtn = document.createElement('button');
-                    nextBtn.className = 'absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 rounded-full p-2';
-                    nextBtn.innerHTML = '<i data-feather="chevron-right" class="w-5 h-5 text-white"></i>';
-                    
-                    // Ajouter les boutons au conteneur
-                    container.style.position = 'relative';
-                    container.appendChild(prevBtn);
-                    container.appendChild(nextBtn);
-                    
-                    // Initialiser les indicateurs
-                    const indicators = document.createElement('div');
-                    indicators.className = 'absolute bottom-2 left-0 right-0 flex justify-center gap-1';
-                    
-                    for (let i = 0; i < container.children.length; i++) {
-                        if (container.children[i].tagName === 'IMG') {
-                            const dot = document.createElement('div');
-                            dot.className = `w-2 h-2 rounded-full ${i === 0 ? 'bg-blue-500' : 'bg-gray-500'}`;
-                            indicators.appendChild(dot);
-                        }
-                    }
-                    
-                    container.appendChild(indicators);
-                    
-                    // Mettre à jour les icônes
-                    feather.replace();
-                    
-                    // Gérer la navigation
-                    let currentIndex = 0;
-                    
-                    prevBtn.addEventListener('click', function() {
-                        if (currentIndex > 0) {
-                            currentIndex--;
-                            scrollToImage();
-                            updateIndicators();
-                        }
-                    });
-                    
-                    nextBtn.addEventListener('click', function() {
-                        if (currentIndex < container.children.length - 3) { // -3 pour les 2 boutons et les indicateurs
-                            currentIndex++;
-                            scrollToImage();
-                            updateIndicators();
-                        }
-                    });
-                    
-                    function scrollToImage() {
-                        const images = Array.from(container.children).filter(child => child.tagName === 'IMG');
-                        if (images[currentIndex]) {
-                            images[currentIndex].scrollIntoView({ behavior: 'smooth', inline: 'start' });
-                        }
-                    }
-                    
-                    function updateIndicators() {
-                        const dots = indicators.children;
-                        for (let i = 0; i < dots.length; i++) {
-                            dots[i].className = `w-2 h-2 rounded-full ${i === currentIndex ? 'bg-blue-500' : 'bg-gray-500'}`;
-                        }
-                    }
-                }
-            });
+
+            setTimeout(function() {
+                const flashMessages = document.querySelectorAll('.flash-message');
+                flashMessages.forEach(message => {
+                    message.style.opacity = '0';
+                    message.style.transition = 'opacity 0.5s ease';
+                    setTimeout(() => {
+                        message.remove();
+                    }, 500);
+                });
+            }, 3000);
         });
     </script>
 </body>
