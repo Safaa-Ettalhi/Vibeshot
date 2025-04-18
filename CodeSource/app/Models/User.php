@@ -19,6 +19,8 @@ class User extends Authenticatable
         'profile_image',
         'cover_image',
         'bio',
+        'is_admin',
+        'is_blocked',
     ];
 
     protected $hidden = [
@@ -29,6 +31,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'is_admin' => 'boolean',
+        'is_blocked' => 'boolean',
     ];
 
     public function posts()
@@ -71,5 +75,9 @@ class User extends Authenticatable
     public function isFollowing(User $user)
     {
         return $this->following()->where('following_id', $user->id)->exists();
+    }
+    public function getIsAdminAttribute()
+    {
+        return (bool) $this->attributes['is_admin'];
     }
 }
