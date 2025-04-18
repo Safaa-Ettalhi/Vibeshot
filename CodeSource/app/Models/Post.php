@@ -14,8 +14,11 @@ class Post extends Model
         'caption',
         'image_path',
         'original_post_id',
+        'is_hidden',
     ];
-
+    protected $casts = [
+        'is_hidden' => 'boolean',
+    ];
     public function user()
     {
         return $this->belongsTo(User::class);
