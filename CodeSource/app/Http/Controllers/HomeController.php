@@ -19,13 +19,16 @@ class HomeController extends Controller
         $followingIds[] = auth()->id();
         
         $posts = Post::whereIn('user_id', $followingIds)
+            ->where('is_hidden', false)
             ->with(['user', 'comments.user', 'likes'])
             ->latest()
-            ->paginate(10);
+            ->get(); 
+
             
         
         $trendingPosts = Post::withCount('likes')
             ->where('created_at', '>=', now()->subWeek())
+            ->where('is_hidden', false)
             ->orderBy('likes_count', 'desc')
             ->take(3)
             ->get();
@@ -33,6 +36,7 @@ class HomeController extends Controller
        
         $suggestedUsers = User::whereNotIn('id', $followingIds)
             ->where('id', '!=', auth()->id())
+            ->where('is_blocked', false)
             ->inRandomOrder()
             ->take(5)
             ->get();
