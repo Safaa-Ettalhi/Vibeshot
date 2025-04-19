@@ -181,10 +181,7 @@
 </div>
                 </div>
             @endforeach
-            
-            <div class="py-4">
-                {{ $posts->links() }}
-            </div>
+               
         </div>
         
         <div class="w-full md:w-1/3">
