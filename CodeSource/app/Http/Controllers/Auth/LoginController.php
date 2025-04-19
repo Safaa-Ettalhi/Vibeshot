@@ -22,7 +22,11 @@ class LoginController extends Controller
             'email' => 'required|email',
             'password' => 'required',
         ]);
-
+        $user = User::where('email', $request->email)->first();
+        
+        if ($user && $user->is_blocked) {
+            return redirect()->route('blocked');
+        }
         if (Auth::attempt($request->only('email', 'password'))) {
             $request->session()->regenerate();
             return redirect()->intended(route('home'));
