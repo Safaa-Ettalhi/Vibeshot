@@ -12,8 +12,14 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\PostAdminController;
+use App\Http\Controllers\Admin\CommentAdminController;
 
-
+Route::get('/blocked', function () {
+    return view('auth.blocked');
+})->name('blocked');
 Route::get('/', function () {
     return redirect()->route('login');
 });
@@ -77,4 +83,27 @@ Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name
 Route::get('/comments/{comment}/edit', [CommentController::class, 'edit'])->name('comments.edit');
 Route::put('/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');
 Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
+
+
+// Routes pour l'administration
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    
+    // Routes pour les utilisateurs
+    Route::resource('users', UserController::class);
+    Route::post('users/{user}/toggle-admin', [UserController::class, 'toggleAdmin'])->name('users.toggle-admin');
+    Route::post('users/{user}/block', [UserController::class, 'block'])->name('users.block');
+    Route::post('users/{user}/unblock', [UserController::class, 'unblock'])->name('users.unblock');
+    
+    // Routes pour les publications
+    Route::resource('posts', PostAdminController::class);
+    Route::post('posts/{post}/hide', [PostAdminController::class, 'hide'])->name('posts.hide');
+    Route::post('posts/{post}/unhide', [PostAdminController::class, 'unhide'])->name('posts.unhide');
+    
+    // Routes pour les commentaires
+    Route::resource('comments', CommentAdminController::class)->only(['index', 'show', 'destroy']);
+
+
+});
+
 });
