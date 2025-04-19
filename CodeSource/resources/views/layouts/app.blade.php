@@ -20,6 +20,12 @@
              <img src="{{ asset('images/VibeShot.svg') }}" alt="VibeShot Logo">
         </a>
     </div>
+    @if(Auth::check() && Auth::user()->is_admin)
+    <a href="{{ route('admin.dashboard') }}" class="sidebar-link">
+        <i data-feather="settings"></i>
+        <span>Administration</span>
+    </a>
+    @endif
     
     <div class="sidebar-menu mt-4">
                 <a href="{{ route('home') }}" class="sidebar-link {{ request()->routeIs('home') ? 'active' : '' }}">
