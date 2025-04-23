@@ -7,9 +7,8 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Notifications\Messages\BroadcastMessage;
 
-class NewFollowerNotification extends Notification implements ShouldQueue
+class NewFollowerNotification extends Notification
 {
     use Queueable;
 
@@ -22,7 +21,7 @@ class NewFollowerNotification extends Notification implements ShouldQueue
 
     public function via($notifiable)
     {
-        return ['database', 'broadcast'];
+        return ['database'];
     }
 
     public function toArray($notifiable)
@@ -35,18 +34,5 @@ class NewFollowerNotification extends Notification implements ShouldQueue
             'message' => 'a commencé à vous suivre',
             'type' => 'follow',
         ];
-    }
-
-    public function toBroadcast($notifiable)
-    {
-        return new BroadcastMessage([
-            'user_id' => $this->follower->id,
-            'user_name' => $this->follower->name,
-            'user_username' => $this->follower->username,
-            'user_image' => $this->follower->profile_image,
-            'message' => 'a commencé à vous suivre',
-            'type' => 'follow',
-            'created_at' => now()->diffForHumans(),
-        ]);
     }
 }
