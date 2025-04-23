@@ -72,10 +72,15 @@ Route::middleware('auth')->group(function () {
     Route::delete('/users/{user}/follow', [FollowController::class, 'destroy'])->name('follow.destroy');
     
     // Notifications
-    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
-    Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
-    Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.read.all');
-    
+Route::prefix('notifications')->name('notifications.')->middleware('auth')->group(function () {
+    Route::get('/', [NotificationController::class, 'index'])->name('index');
+    Route::post('/{id}/read', [NotificationController::class, 'markAsRead'])->name('read');
+    Route::post('/read-all', [NotificationController::class, 'markAllAsRead'])->name('read.all');
+    Route::get('/unread-count', [NotificationController::class, 'getUnreadCount'])->name('unread.count');
+    Route::get('/count', [NotificationController::class, 'getUnreadCount'])->name('count'); 
+    Route::get('/filter/{type}', [NotificationController::class, 'filterByType'])->name('filter');
+});
+   
     // Recherche
     Route::get('/search', [SearchController::class, 'index'])->name('search');
     // Routes pour les commentaires
