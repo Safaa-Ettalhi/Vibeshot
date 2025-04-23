@@ -12,16 +12,13 @@ class LikeController extends Controller
     
     public function store(Post $post)
     {
-       
         if ($post->likes()->where('user_id', auth()->id())->exists()) {
             return redirect()->back();
         }
         
-        $like = $post->likes()->create([
+ $like = $post->likes()->create([
             'user_id' => auth()->id(),
-        ]);
-        
-        
+        ]);          
         if ($post->user_id !== auth()->id()) {
             $post->user->notify(new NewLikeNotification($post));
         }
