@@ -5,9 +5,8 @@ namespace App\Notifications;
 use App\Models\Post;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\BroadcastMessage;
+use Illuminate\Notifications\Notification;
 
 class NewLikeNotification extends Notification implements ShouldQueue
 {
@@ -15,18 +14,18 @@ class NewLikeNotification extends Notification implements ShouldQueue
 
     protected $post;
 
-  
     public function __construct(Post $post)
     {
         $this->post = $post;
     }
-
+  
     public function via(object $notifiable): array
     {
-        return ['database', 'broadcast'];
+        
+        return ['database'];
     }
 
-    
+
     public function toArray(object $notifiable): array
     {
         return [
