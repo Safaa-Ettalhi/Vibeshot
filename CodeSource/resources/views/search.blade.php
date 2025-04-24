@@ -170,11 +170,13 @@
                 </div>
             </div>
         @else
-            <div class="flex flex-col items-center justify-center py-16 my-8 bg-white/5 rounded-2xl border border-dashed border-white/10">
-                <div class="text-6xl mb-6 animate-pulse">🔍</div>
-                <h3 class="text-2xl font-semibold text-white mb-3">Search for people and posts</h3>
-                <p class="text-gray-400 max-w-md text-center">Enter a search term to find users or posts.</p>
-            </div>
+        <div class="flex flex-col items-center justify-center py-16 my-8 bg-white/5 rounded-2xl border border-dashed border-white/10">
+    <div class="mb-6 animate-pulse bg-blue-900/30 w-24 h-24 rounded-full flex items-center justify-center">
+        <i class="ri-search-line text-5xl text-blue-500"></i>
+    </div>
+    <h3 class="text-2xl font-semibold text-white mb-3">Search for people and posts</h3>
+    <p class="text-gray-400 max-w-md text-center">Enter a search term to find users or posts.</p>
+</div>
         @endif
     </div>
 </div>
