@@ -134,17 +134,12 @@
                             @endif
                         </div>
                     @endforeach
-                </div>
-                
-                
-                <div class="bg-gray-900/30 p-4 border-t border-gray-800/50">
-                    {{ $notifications->links('vendor.pagination.custom') }}
-                </div>
+                </div>  
             @else
               
                 <div class="py-16 px-4 text-center">
                     <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-800/50 mb-6">
-                        <i data-feather="bell" class="w-8 h-8 text-gray-500"></i>
+                        <i data-feather="bell" class="w-8 h-8  text-blue-500"></i>
                     </div>
                     <h3 class="text-xl font-semibold text-white mb-2">No notifications yet</h3>
                     <p class="text-gray-400 max-w-sm mx-auto">
