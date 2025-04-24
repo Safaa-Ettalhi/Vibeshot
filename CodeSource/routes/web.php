@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\PostAdminController;
 use App\Http\Controllers\Admin\CommentAdminController;
+use App\Http\Controllers\TrendingController;
 
 Route::get('/blocked', function () {
     return view('auth.blocked');
@@ -39,6 +40,7 @@ Route::middleware('auth')->group(function () {
     
     // Page d'accueil
     Route::get('/home', [HomeController::class, 'index'])->name('home');
+    Route::post('/home/search', [HomeController::class, 'search'])->name('home.search');
     
     // Posts
     Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
@@ -88,7 +90,8 @@ Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name
 Route::get('/comments/{comment}/edit', [CommentController::class, 'edit'])->name('comments.edit');
 Route::put('/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');
 Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
-
+//trending
+Route::get('/trending', [TrendingController::class, 'index'])->name('trending.index');
 
 // Routes pour l'administration
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
