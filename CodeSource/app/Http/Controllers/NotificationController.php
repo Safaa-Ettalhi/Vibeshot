@@ -9,7 +9,7 @@ class NotificationController extends Controller
 {
  public function index(Request $request)
     {
-        $notifications = auth()->user()->notifications()->orderBy('created_at', 'desc')->paginate(10);
+        $notifications = auth()->user()->notifications()->orderBy('created_at', 'desc')->get();
         
         
         if ($request->ajax()) {
@@ -74,7 +74,7 @@ class NotificationController extends Controller
         $query->whereJsonContains('data->type', $type);
     }
 
-    $notifications = $query->orderBy('created_at', 'desc')->paginate(10);
+    $notifications = $query->orderBy('created_at', 'desc')->get();
 
     if ($request->ajax() || $request->wantsJson()) {
         return response()->json([
