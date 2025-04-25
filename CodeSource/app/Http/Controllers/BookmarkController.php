@@ -14,7 +14,7 @@ class BookmarkController extends Controller
         $bookmarkedPosts = auth()->user()->bookmarks()
             ->with(['post.user', 'post.comments', 'post.likes'])
             ->latest()
-            ->paginate(12);
+            ->get();
             
         return view('bookmarks', compact('bookmarkedPosts'));
     }
