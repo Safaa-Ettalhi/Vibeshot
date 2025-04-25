@@ -31,7 +31,7 @@ class NewFollowerNotification extends Notification
             'user_name' => $this->follower->name,
             'user_username' => $this->follower->username,
             'user_image' => $this->follower->profile_image,
-            'message' => 'a commencé à vous suivre',
+            'message' => 'has started to follow you',
             'type' => 'follow',
         ];
     }

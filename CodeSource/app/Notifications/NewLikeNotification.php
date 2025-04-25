@@ -35,7 +35,7 @@ class NewLikeNotification extends Notification implements ShouldQueue
             'user_image' => auth()->user()->profile_image,
             'post_id' => $this->post->id,
             'post_image' => $this->post->image_path,
-            'message' => 'a aimé votre publication',
+            'message' => 'liked your post',
             'type' => 'like',
         ];
     }
@@ -49,7 +49,7 @@ class NewLikeNotification extends Notification implements ShouldQueue
             'user_image' => auth()->user()->profile_image,
             'post_id' => $this->post->id,
             'post_image' => $this->post->image_path,
-            'message' => 'a aimé votre publication',
+            'message' => 'liked your post',
             'type' => 'like',
             'created_at' => now()->diffForHumans(),
         ]);

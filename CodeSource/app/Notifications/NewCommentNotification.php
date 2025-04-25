@@ -39,7 +39,7 @@ class NewCommentNotification extends Notification
             'user_image' => auth()->user()->profile_image,
             'post_id' => $this->post->id,
             'comment_id' => $this->comment->id,
-            'message' => 'a commenté votre publication',
+            'message' => 'commented on your post',
             'type' => 'comment',
         ];
     }
@@ -53,7 +53,7 @@ class NewCommentNotification extends Notification
             'user_image' => auth()->user()->profile_image,
             'post_id' => $this->post->id,
             'comment_id' => $this->comment->id,
-            'message' => 'a commenté votre publication',
+            'message' => 'commented on your post',
             'type' => 'comment',
             'created_at' => now()->diffForHumans(),
         ]);
