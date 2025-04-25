@@ -25,7 +25,7 @@
     @if($user->id === auth()->id())
         <div class="edit-btn-container ">
             <a href="{{ route('profile.edit') }}" class="edit-profile-btn ">
-                <i data-feather="edit-2" class=""></i>
+                <i class="ri-edit-2-line"></i>
             </a>
         </div>
     @endif
@@ -88,11 +88,7 @@
                 <div class="flex justify-between items-center">
                     <div class="flex gap-3">
                         <label for="image-upload" class="cursor-pointer flex items-center gap-2 text-gray-300 hover:text-blue-400 transition-colors bg-gray-800/70 px-3 py-1.5 rounded-lg border border-gray-700/50 hover:border-blue-500/30">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-image">
-                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                                <polyline points="21 15 16 10 5 21"></polyline>
-                            </svg>
+                            <i class="ri-image-line text-lg"></i>
                             <span class="text-sm font-medium">Add images</span>
                         </label>
                         <input type="file" id="image-upload" name="images[]" multiple accept="image/*" class="hidden">
@@ -100,10 +96,7 @@
                     
                     <button type="submit" class="btn btn-primary flex items-center gap-2" id="submitPost">
                         Post
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-send">
-                            <line x1="22" y1="2" x2="11" y2="13"></line>
-                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                        </svg>
+                        <i class="ri-send-plane-line"></i>
                     </button>
                 </div>
             </form>
@@ -114,19 +107,52 @@
   
 
 <div class="recent-publications-header">
-    <h2 class="recent-publications-title">Recent Publications</h2>
+    <h2 class="recent-publications-title">
+        @if(isset($filter))
+            @if($filter == 'recent')
+                Recent Publications
+            @elseif($filter == 'popular')
+                Most Popular
+            @elseif($filter == 'images')
+                Images Only
+            @elseif($filter == 'comments')
+                Most Commented
+            @elseif($filter == 'oldest')
+                Oldest First
+            @endif
+        @else
+            Recent Publications
+        @endif
+    </h2>
     
-    <div class="filter-container">
-        <button class="filter-button">
-            <i data-feather="filter" class="filter-icon"></i>
-            <span>filter</span>
+    <div class="filter-container relative">
+        <button class="filter-button" id="filterButton">
+            <i class="ri-filter-line filter-icon"></i>
+            <span>Filter</span>
         </button>
+        <div class="filter-dropdown hidden absolute right-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg z-10 border border-gray-700 overflow-hidden" id="filterDropdown">
+            <a href="{{ route('profile.show', ['username' => $user->username, 'filter' => 'recent']) }}" class="block w-full text-left px-4 py-2 text-sm text-white hover:bg-gray-700 {{ $filter == 'recent' ? 'bg-blue-600' : '' }}">
+                <i class="ri-time-line mr-2"></i> Recent
+            </a>
+            <a href="{{ route('profile.show', ['username' => $user->username, 'filter' => 'popular']) }}" class="block w-full text-left px-4 py-2 text-sm text-white hover:bg-gray-700 {{ $filter == 'popular' ? 'bg-blue-600' : '' }}">
+                <i class="ri-heart-line mr-2"></i> Most Popular
+            </a>
+            <a href="{{ route('profile.show', ['username' => $user->username, 'filter' => 'comments']) }}" class="block w-full text-left px-4 py-2 text-sm text-white hover:bg-gray-700 {{ $filter == 'comments' ? 'bg-blue-600' : '' }}">
+                <i class="ri-message-3-line mr-2"></i> Most Commented
+            </a>
+            <a href="{{ route('profile.show', ['username' => $user->username, 'filter' => 'images']) }}" class="block w-full text-left px-4 py-2 text-sm text-white hover:bg-gray-700 {{ $filter == 'images' ? 'bg-blue-600' : '' }}">
+                <i class="ri-image-line mr-2"></i> Images Only
+            </a>
+            <a href="{{ route('profile.show', ['username' => $user->username, 'filter' => 'oldest']) }}" class="block w-full text-left px-4 py-2 text-sm text-white hover:bg-gray-700 {{ $filter == 'oldest' ? 'bg-blue-600' : '' }}">
+                <i class="ri-history-line mr-2"></i> Oldest First
+            </a>
+        </div>
     </div>
 </div>
 
 <!-- Publications Container -->
 <div class="publications-container">
-    @forelse($user->posts as $post)
+    @forelse(isset($posts) ? $posts : $user->posts as $post)
         <div class="publication-card">
            
             <div class="publication-header">
@@ -141,7 +167,7 @@
                 @if($user->id === auth()->id())
     <div class="publication-menu">
         <button class="publication-menu-btn">
-            <i data-feather="more-horizontal"></i>
+            <i class="ri-more-2-fill"></i>
         </button>
         <div class="publication-menu-dropdown hidden">
             <form action="{{ route('posts.destroy', $post) }}" method="POST">
@@ -176,10 +202,10 @@
                 @if($post->images->count() > 1)
                     <div class="image-pagination-controls">
                         <button class="pagination-arrow prev-image" data-post-id="{{ $post->id }}">
-                            <i data-feather="chevron-left"></i>
+                            <i class="ri-arrow-left-s-line"></i>
                         </button>
                         <button class="pagination-arrow next-image" data-post-id="{{ $post->id }}">
-                            <i data-feather="chevron-right"></i>
+                            <i class="ri-arrow-right-s-line"></i>
                         </button>
                     </div>
                     
@@ -198,7 +224,7 @@
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="publication-action liked">
-                            <i data-feather="heart" class="fill-current"></i>
+                            <i class="ri-heart-fill"></i>
                             <span>{{ $post->likes->count() }}</span>
                         </button>
                     </form>
@@ -206,19 +232,19 @@
                     <form action="{{ route('likes.store', $post) }}" method="POST">
                         @csrf
                         <button type="submit" class="publication-action">
-                            <i data-feather="heart"></i>
+                            <i class="ri-heart-line"></i>
                             <span>{{ $post->likes->count() }}</span>
                         </button>
                     </form>
                 @endif
                 
                 <a href="{{ route('posts.show', $post) }}" class="publication-action">
-                    <i data-feather="message-circle"></i>
+                    <i class="ri-message-3-line"></i>
                     <span>{{ $post->comments->count() }}</span>
                 </a>
                 
                 <a href="" class="publication-action">
-                    <i data-feather="repeat"></i>
+                    <i class="ri-repeat-line"></i>
                     <span>{{ $post->shares->count() }}</span>
                 </a>
                 
@@ -227,14 +253,14 @@
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="publication-action active">
-                            <i data-feather="bookmark" class="fill-current"></i>
+                            <i class="ri-bookmark-fill"></i>
                         </button>
                     </form>
                 @else
                     <form action="{{ route('bookmarks.store', $post) }}" method="POST">
                         @csrf
                         <button type="submit" class="publication-action">
-                            <i data-feather="bookmark"></i>
+                            <i class="ri-bookmark-line"></i>
                         </button>
                     </form>
                 @endif
@@ -250,8 +276,42 @@
 </div>
 </div>
 
+<style>
+.filter-dropdown {
+    transition: all 0.2s ease;
+    transform-origin: top right;
+}
+
+.filter-dropdown.hidden {
+    display: none;
+    opacity: 0;
+    transform: scale(0.95);
+}
+
+.filter-dropdown:not(.hidden) {
+    display: block;
+    opacity: 1;
+    transform: scale(1);
+}
+</style>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    const filterButton = document.getElementById('filterButton');
+    const filterDropdown = document.getElementById('filterDropdown');
+    
+    if (filterButton && filterDropdown) {
+        filterButton.addEventListener('click', function(e) {
+            e.stopPropagation();
+            filterDropdown.classList.toggle('hidden');
+        });
+        
+        document.addEventListener('click', function(e) {
+            if (!filterButton.contains(e.target) && !filterDropdown.contains(e.target)) {
+                filterDropdown.classList.add('hidden');
+            }
+        });
+    }
   
     if (typeof feather !== 'undefined') {
         feather.replace();
@@ -318,15 +378,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 const removeButton = document.createElement('button');
                 removeButton.className = 'absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center shadow-lg hover:bg-red-600 transition-colors image-remove-btn';
                 removeButton.type = 'button'; // Important pour éviter la soumission du formulaire
-                removeButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
+                removeButton.innerHTML = '<i class="ri-close-line"></i>';
                 
                 previewDiv.appendChild(img);
                 previewDiv.appendChild(removeButton);
                 previewContainer.appendChild(previewDiv);
-
-                if (typeof feather !== 'undefined') {
-                    feather.replace();
-                }
             };
             
             reader.readAsDataURL(file);
