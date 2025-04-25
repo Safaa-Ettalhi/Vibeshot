@@ -75,8 +75,8 @@
                     <div class="p-5 border-b border-white/10 flex items-center justify-between">
                         <h2 class="text-xl font-semibold text-white relative pl-3 before:content-[''] before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-1 before:h-3/5 before:bg-gradient-to-b before:from-blue-500 before:to-indigo-600 before:rounded-md">Posts</h2>
                         <div class="flex items-center gap-2">
-                            <button class="view-toggle bg-transparent border-none w-9 h-9 rounded-lg flex items-center justify-center text-gray-400 cursor-pointer transition-all hover:bg-white/10 hover:text-white" data-view="grid">
-                                <i data-feather="grid" class="w-4.5 h-4.5"></i>
+                            <button class="view-toggle border-none w-9 h-9 rounded-lg flex items-center justify-center cursor-pointer transition-all hover:bg-white/10 hover:text-white text-gray-400 bg-transparent" data-view="grid">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-grid w-4.5 h-4.5"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
                             </button>
                             <button class="view-toggle active bg-white/10 border-none w-9 h-9 rounded-lg flex items-center justify-center text-blue-500 cursor-pointer transition-all hover:bg-white/15" data-view="masonry">
                                 <i data-feather="layout" class="w-4.5 h-4.5"></i>
@@ -182,13 +182,11 @@
 </div>
 
 <script>
-
 document.addEventListener('DOMContentLoaded', function() {
     
     if (typeof feather !== 'undefined') {
         feather.replace();
     }
-    
     
     const viewToggles = document.querySelectorAll('.view-toggle');
     const postsContainer = document.getElementById('postsContainer');
@@ -196,40 +194,57 @@ document.addEventListener('DOMContentLoaded', function() {
     if (viewToggles.length && postsContainer) {
         viewToggles.forEach(toggle => {
             toggle.addEventListener('click', function() {
-               
                 viewToggles.forEach(btn => {
                     btn.classList.remove('active', 'bg-white/10', 'text-blue-500');
                     btn.classList.add('text-gray-400', 'bg-transparent');
                 });
                 this.classList.add('active', 'bg-white/10', 'text-blue-500');
                 this.classList.remove('text-gray-400', 'bg-transparent');
-                
-                
                 const view = this.getAttribute('data-view');
+
                 if (view === 'grid') {
-                    postsContainer.classList.remove('posts-masonry', 'columns-1', 'sm:columns-2', 'lg:columns-3');
+                    
+                    postsContainer.classList.remove('posts-masonry', 'columns-1', 'sm:columns-2', 'lg:columns-3', 'space-y-5');
                     postsContainer.classList.add('grid', 'grid-cols-1', 'sm:grid-cols-2', 'lg:grid-cols-3', 'gap-5');
-                } else {
+                    const postImages = postsContainer.querySelectorAll('.post-item img:not(.rounded-full)');
+                    postImages.forEach(img => {
+                        img.classList.remove('w-full');
+                        img.classList.add('w-full', 'h-64', 'object-cover');
+                    });
+
+                    const postItems = postsContainer.querySelectorAll('.post-item');
+                    postItems.forEach(item => {
+                        item.classList.remove('break-inside-avoid');
+                        item.classList.add('h-auto');
+                    });
+                } else { 
                     postsContainer.classList.remove('grid', 'grid-cols-1', 'sm:grid-cols-2', 'lg:grid-cols-3');
-                    postsContainer.classList.add('posts-masonry', 'columns-1', 'sm:columns-2', 'lg:columns-3');
+                    postsContainer.classList.add('posts-masonry', 'columns-1', 'sm:columns-2', 'lg:columns-3', 'space-y-5');
+
+                    const postImages = postsContainer.querySelectorAll('.post-item img:not(.rounded-full)');
+                    postImages.forEach(img => {
+                        img.classList.remove('h-64');
+                        img.classList.add('w-full');
+                    });
+
+                    const postItems = postsContainer.querySelectorAll('.post-item');
+                    postItems.forEach(item => {
+                        item.classList.add('break-inside-avoid');
+                        item.classList.remove('h-auto');
+                    });
                 }
-                
-              
                 if (typeof feather !== 'undefined') {
                     feather.replace();
                 }
             });
         });
     }
-    
-    
+
     const postItems = document.querySelectorAll('.post-item');
     if (postItems.length) {
-       
         const observer = new IntersectionObserver((entries) => {
             entries.forEach((entry, index) => {
                 if (entry.isIntersecting) {
-                    
                     setTimeout(() => {
                         entry.target.style.opacity = '1';
                         entry.target.style.transform = 'translateY(0)';
@@ -238,7 +253,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         }, { threshold: 0.1 });
-        
         
         postItems.forEach(item => {
             item.style.opacity = '0';
