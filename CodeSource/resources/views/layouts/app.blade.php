@@ -10,6 +10,7 @@
     <script src="https://js.pusher.com/7.2/pusher.min.js"></script> 
     <link href="{{ asset('css/vibeshot.css') }}" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <script src="https://unpkg.com/feather-icons"></script>
 </head>
 <body class="">
