@@ -12,6 +12,11 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        .notification-badge {
+            box-shadow: 0 0 0 1px #121212; 
+        }
+    </style>
 </head>
 <body class="">
     @auth
@@ -38,13 +43,15 @@
                     <span>Explore</span>
                 </a>
                 <a href="{{ route('notifications.index') }}" class="sidebar-link {{ request()->routeIs('notifications.*') ? 'active' : '' }}">
-                    <i data-feather="bell"></i>
+                    <div class="relative inline-block">
+                        <i data-feather="bell"></i>
+                        @if(auth()->user()->unreadNotifications->count() > 0)
+                            <span class="notification-badge absolute -top-1 -right-1 bg-blue-500 text-white w-4 h-4 flex items-center justify-center rounded-full text-[10px] font-medium">
+                                {{ auth()->user()->unreadNotifications->count() }}
+                            </span>
+                        @endif
+                    </div>
                     <span>Notifications</span>
-                    @if(auth()->user()->unreadNotifications->count() > 0)
-                        <span class="ml-auto bg-primary-500 text-white px-2 py-1 rounded-full text-xs">
-                            {{ auth()->user()->unreadNotifications->count() }}
-                        </span>
-                    @endif
                 </a>
                 <a href="{{ route('bookmarks.index') }}" class="sidebar-link {{ request()->routeIs('bookmarks.*') ? 'active' : '' }}">
                     <i data-feather="bookmark"></i>
@@ -93,12 +100,14 @@
                 <i data-feather="home"></i>
             </a>
             <a href="{{ route('notifications.index') }}" class="mobile-nav-link {{ request()->routeIs('notifications.*') ? 'active' : '' }}">
-                <i data-feather="bell"></i>
-                @if(auth()->user()->unreadNotifications->count() > 0)
-                    <span class="absolute top-0 right-0 bg-primary-500 text-white px-1 rounded-full text-xs">
-                        {{ auth()->user()->unreadNotifications->count() }}
-                    </span>
-                @endif
+                <div class="relative inline-block">
+                    <i data-feather="bell"></i>
+                    @if(auth()->user()->unreadNotifications->count() > 0)
+                        <span class="notification-badge absolute -top-1 -right-1 bg-blue-500 text-white w-4 h-4 flex items-center justify-center rounded-full text-[10px] font-medium">
+                            {{ auth()->user()->unreadNotifications->count() }}
+                        </span>
+                    @endif
+                </div>
             </a>
             <a href="{{ route('profile.show', auth()->user()->username) }}" class="mobile-nav-link {{ request()->routeIs('profile.show') && request()->username == auth()->user()->username ? 'active' : '' }}">
                 <i data-feather="user"></i>
@@ -140,7 +149,7 @@
             document.addEventListener('click', function(event) {
                 if (!event.target.closest('.btn-icon')) {
                     document.querySelectorAll('.absolute').forEach(dropdown => {
-                        if (!dropdown.classList.contains('hidden')) {
+                        if (!dropdown.classList.contains('hidden') && !dropdown.classList.contains('notification-badge')) {
                             dropdown.classList.add('hidden');
                         }
                     });
