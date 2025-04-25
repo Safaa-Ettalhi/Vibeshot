@@ -105,7 +105,7 @@
                                     <div class="px-4 pt-1 pb-2">
                                         <div class="flex space-x-4 overflow-x-auto pb-2 scrollbar-hide">
                                             @foreach($post->images as $image)
-                                                <div class="flex-none w-[48%] sm:w-[50%] rounded-xl overflow-hidden">
+                                                <div class="flex-none w-[48%] sm:w-[50%] rounded-xl overflow-hidden border border-gray-700/70">
                                                     <img src="{{ asset('storage/' . $image->image_path) }}" alt="Post image" class="w-full h-auto object-cover aspect-square">
                                                 </div>
                                             @endforeach
@@ -113,7 +113,7 @@
                                     </div>
                                 @elseif($post->images->count() == 1)
                                     <div class="px-4 pt-1 pb-2">
-                                        <div class="w-full rounded-xl overflow-hidden">
+                                        <div class="w-full rounded-xl overflow-hidden border border-gray-700/70">
                                             <img src="{{ asset('storage/' . $post->images->first()->image_path) }}" alt="Post image" class="w-full h-auto object-cover">
                                         </div>
                                     </div>

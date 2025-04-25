@@ -31,7 +31,7 @@
    
     <div class="grid grid-flow-col auto-cols-max gap-4 overflow-x-auto px-4 pb-6 hide-scrollbar snap-x snap-mandatory">
         @forelse($bookmarkedPosts as $bookmark)
-            <div class="relative w-[280px] h-[280px] rounded-xl overflow-hidden snap-start">
+            <div class="relative w-[280px] h-[280px] rounded-xl overflow-hidden snap-start border border-gray-700/70">
                 <a href="{{ route('posts.show', $bookmark->post) }}">
                     <img src="{{ 
                         $bookmark->post->images->count() > 0 
