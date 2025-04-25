@@ -68,54 +68,47 @@
         </div>
     </div>
     
-    <!-- Create Post Section (owner) -->
+    <!-- Create Post -->
     @if($user->id === auth()->id())
     <div class="card Create max-w-5xl">
-                <div class="card-body">
-                    <form action="{{ route('posts.store') }}" method="POST" enctype="multipart/form-data" id="createPostForm">
-                        @csrf
-                        <div class="">
-                            
-                            <div class="form-group flex space-x-3">
-                            <img src="{{ auth()->user()->profile_image ? asset('storage/' . auth()->user()->profile_image) : asset('images/default-avatar.svg') }}" alt="{{ auth()->user()->name }}" class="avatar mb-3">
-                                <textarea name="caption" class="form-vibe" placeholder="Share your vibe!" rows="2"></textarea>
-                            </div>
-                        </div>
-                        
-                        <div id="preview-container" class="" style="display: none;">
-                           
-                        </div>
-                        
-                        <div class="flex justify-between items-center">
-                            <div class="flex gap-3">
-                                <label for="image-upload" class="cursor-pointer">
-                                    <i data-feather="image" class="text-blue-500"></i>
-                                </label>
-                                <input type="file" id="image-upload" name="images[]" multiple accept="image/*" class="hidden">
-                                
-                                <label for="gif-upload" class="cursor-pointer">
-                                    <i data-feather="film" class="text-blue-500"></i>
-                                </label>
-                                <input type="file" id="gif-upload" name="gif" accept="image/gif" class="hidden">
-                                
-                                <button type="button" class="cursor-pointer bg-transparent border-0 p-0">
-                                    <i data-feather="list" class="text-blue-500"></i>
-                                </button>
-                                
-                                <button type="button" class="cursor-pointer bg-transparent border-0 p-0">
-                                    <i data-feather="smile" class="text-blue-500"></i>
-                                </button>
-                                
-                                <button type="button" class="cursor-pointer bg-transparent border-0 p-0">
-                                    <i data-feather="calendar" class="text-blue-500"></i>
-                                </button>
-                            </div>
-                            
-                            <button type="submit" class="btn btn-primary" id="submitPost">Post</button>
-                        </div>
-                    </form>
+        <div class="card-body">
+            <form action="{{ route('posts.store') }}" method="POST" enctype="multipart/form-data" id="createPostForm">
+                @csrf
+                <div class="">
+                    <div class="form-group flex space-x-3">
+                        <img src="{{ auth()->user()->profile_image ? asset('storage/' . auth()->user()->profile_image) : asset('images/default-avatar.svg') }}" alt="{{ auth()->user()->name }}" class="avatar mb-3">
+                        <textarea name="caption" class="form-vibe" placeholder="Share your vibe!" rows="2"></textarea>
+                    </div>
                 </div>
-            </div>
+
+                <div id="preview-container" class="grid grid-cols-3 gap-3 my-3" style="display: none;">
+                    
+                </div>
+                
+                <div class="flex justify-between items-center">
+                    <div class="flex gap-3">
+                        <label for="image-upload" class="cursor-pointer flex items-center gap-2 text-gray-300 hover:text-blue-400 transition-colors bg-gray-800/70 px-3 py-1.5 rounded-lg border border-gray-700/50 hover:border-blue-500/30">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-image">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                <polyline points="21 15 16 10 5 21"></polyline>
+                            </svg>
+                            <span class="text-sm font-medium">Add images</span>
+                        </label>
+                        <input type="file" id="image-upload" name="images[]" multiple accept="image/*" class="hidden">
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary flex items-center gap-2" id="submitPost">
+                        Post
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-send">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
     @endif
     
   
@@ -249,7 +242,7 @@
         </div>
     @empty
         <div class="empty-publications">
-            <div class="empty-icon">📷</div>
+        <div class="empty-icon bg-gray-800/50 w-20 h-20 rounded-full flex items-center justify-center"> <i class="ri-camera-line text-4xl text-blue-500"></i></div>
             <h3 class="empty-title">No posts yet</h3>
             <p class="empty-text">When {{ $user->id === auth()->id() ? 'you share' : $user->name . ' shares' }} posts, they'll appear here.</p>
         </div>
@@ -259,70 +252,124 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    
+  
+    if (typeof feather !== 'undefined') {
+        feather.replace();
+    }
+
     const imageUpload = document.getElementById('image-upload');
-    if (imageUpload) {
-        const imagePreview = document.getElementById('image-preview');
-        const previewContainer = document.getElementById('preview-container');
-        const form = document.getElementById('createPostForm');
+    const previewContainer = document.getElementById('preview-container');
+    
+    if (imageUpload && previewContainer) {
+        let selectedFiles = [];
         
-        imageUpload.addEventListener('change', function() {
-            if (this.files && this.files[0]) {
-                const reader = new FileReader();
-                
-                reader.onload = function(e) {
-                    imagePreview.src = e.target.result;
-                    previewContainer.style.display = 'block';
-                };
-                
-                reader.readAsDataURL(this.files[0]);
+        function updateFileInput() {
+            const dataTransfer = new DataTransfer();
+            selectedFiles.forEach(file => {
+                dataTransfer.items.add(file);
+            });
+            imageUpload.files = dataTransfer.files;
+        }
+
+        previewContainer.addEventListener('click', function(e) {
+
+            if (e.target.closest('.image-remove-btn')) {
+                const removeButton = e.target.closest('.image-remove-btn');
+                const previewDiv = removeButton.closest('.image-preview-item');
+                const imageIndex = parseInt(previewDiv.dataset.index);
+
+                selectedFiles.splice(imageIndex, 1);
+
+                updateFileInput();
+                refreshPreviews();
+
+                if (selectedFiles.length === 0) {
+                    previewContainer.style.display = 'none';
+                }
+            }
+        });
+
+        function refreshPreviews() {
+
+            previewContainer.innerHTML = '';
+
+            if (selectedFiles.length > 0) {
+                previewContainer.style.display = 'grid';
+                selectedFiles.forEach((file, index) => {
+                    createImagePreview(file, index);
+                });
             } else {
                 previewContainer.style.display = 'none';
             }
+        }
+
+        function createImagePreview(file, index) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                const previewDiv = document.createElement('div');
+                previewDiv.className = 'relative rounded-lg overflow-hidden aspect-square image-preview-item';
+                previewDiv.dataset.index = index;
+                
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.className = 'w-full h-full object-cover';
+                
+                const removeButton = document.createElement('button');
+                removeButton.className = 'absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center shadow-lg hover:bg-red-600 transition-colors image-remove-btn';
+                removeButton.type = 'button'; // Important pour éviter la soumission du formulaire
+                removeButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
+                
+                previewDiv.appendChild(img);
+                previewDiv.appendChild(removeButton);
+                previewContainer.appendChild(previewDiv);
+
+                if (typeof feather !== 'undefined') {
+                    feather.replace();
+                }
+            };
+            
+            reader.readAsDataURL(file);
+        }
+
+        imageUpload.addEventListener('change', function() {
+            for (let i = 0; i < this.files.length; i++) {
+                selectedFiles.push(this.files[i]);
+            }
+
+            refreshPreviews();
         });
     }
-    
-   
-    const menuButtons = document.querySelectorAll('.post-menu-btn');
+
+    const menuButtons = document.querySelectorAll('.publication-menu-btn');
     menuButtons.forEach(button => {
         button.addEventListener('click', function(e) {
             e.stopPropagation();
-            const menu = this.nextElementSibling;
-            menu.classList.toggle('hidden');
+            const dropdown = this.parentNode.querySelector('.publication-menu-dropdown');
+            dropdown.classList.toggle('hidden');
         });
     });
-    
-   
+
     document.addEventListener('click', function() {
-        document.querySelectorAll('.post-menu').forEach(menu => {
+        document.querySelectorAll('.publication-menu-dropdown').forEach(menu => {
             if (!menu.classList.contains('hidden')) {
                 menu.classList.add('hidden');
             }
         });
     });
-});
-
-
-document.addEventListener('DOMContentLoaded', function() {
-   
-    if (typeof feather !== 'undefined') {
-        feather.replace();
-    }
     function navigateImages(container, direction) {
         const imagesScroll = container.querySelector('.publication-images-scroll');
         const totalImages = parseInt(imagesScroll.getAttribute('data-total-images'));
         let currentIndex = parseInt(imagesScroll.getAttribute('data-current-image'));
+        
         if (direction === 'next') {
             currentIndex = (currentIndex + 1) % totalImages;
         } else {
             currentIndex = (currentIndex - 1 + totalImages) % totalImages;
         }
+        
         imagesScroll.setAttribute('data-current-image', currentIndex);
-        
-
         imagesScroll.style.transform = `translateX(-${currentIndex * 100}%)`;
-        
-       
         const indicators = container.querySelectorAll('.pagination-dot');
         indicators.forEach((dot, idx) => {
             if (idx === currentIndex) {
@@ -332,8 +379,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    
-    
     const prevButtons = document.querySelectorAll('.prev-image');
     const nextButtons = document.querySelectorAll('.next-image');
     
@@ -350,20 +395,14 @@ document.addEventListener('DOMContentLoaded', function() {
             navigateImages(container, 'next');
         });
     });
-    
     document.querySelectorAll('.pagination-dot').forEach(dot => {
         dot.addEventListener('click', function() {
             const container = this.closest('.publication-images-container');
             const imagesScroll = container.querySelector('.publication-images-scroll');
             const index = parseInt(this.getAttribute('data-index'));
             
-
             imagesScroll.setAttribute('data-current-image', index);
-            
-            
             imagesScroll.style.transform = `translateX(-${index * 100}%)`;
-            
-           
             const indicators = container.querySelectorAll('.pagination-dot');
             indicators.forEach((d, i) => {
                 if (i === index) {
@@ -372,26 +411,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     d.classList.remove('active');
                 }
             });
-        });
-    });
-    
-    
-    const menuButtons = document.querySelectorAll('.publication-menu-btn');
-    
-    menuButtons.forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.stopPropagation();
-            const dropdown = this.parentNode.querySelector('.publication-menu-dropdown');
-            dropdown.classList.toggle('hidden');
-        });
-    });
-    
-    
-    document.addEventListener('click', function() {
-        document.querySelectorAll('.publication-menu-dropdown').forEach(menu => {
-            if (!menu.classList.contains('hidden')) {
-                menu.classList.add('hidden');
-            }
         });
     });
 });
