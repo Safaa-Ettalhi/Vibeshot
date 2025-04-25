@@ -10,22 +10,48 @@ use Illuminate\Validation\Rule;
 
 class ProfileController extends Controller
 {
-
-    
-    public function show($username)
+    public function show(Request $request, $username)
     {
-        $user = User::where('username', $username)
-            ->with(['posts' => function ($query) {
-                $query->latest()->with(['likes', 'comments', 'user']);
-            }])
-            ->firstOrFail();
+        $user = User::where('username', $username)->firstOrFail();
+        $filter = $request->input('filter', 'recent');
+
+        $postsQuery = $user->posts()->with(['likes', 'comments', 'user']);
+
+        switch ($filter) {
+            case 'images':
+                $postsQuery->where(function($query) {
+                    $query->where(function($q) {
+                        $q->whereHas('images')
+                          ->orWhereNotNull('image_path');
+                    })
+                    ->whereNull('caption');
+                });
+                break;
+            case 'popular':
+                $postsQuery->withCount('likes')
+                          ->orderBy('likes_count', 'desc');
+                break;
+            case 'comments':
+                $postsQuery->withCount('comments')
+                          ->orderBy('comments_count', 'desc');
+                break;
+            case 'oldest':
+                $postsQuery->oldest();
+                break;
+            case 'recent':
+            default:
+                $postsQuery->latest();
+                break;
+        }
+
+        $posts = $postsQuery->get();
             
         $postsCount = $user->posts()->count();
         $followersCount = $user->followers()->count();
         $followingCount = $user->following()->count();
         $isFollowing = auth()->check() ? auth()->user()->isFollowing($user) : false;
         
-        return view('profile.show', compact('user', 'postsCount', 'followersCount', 'followingCount', 'isFollowing'));
+        return view('profile.show', compact('user', 'posts', 'postsCount', 'followersCount', 'followingCount', 'isFollowing', 'filter'));
     }
     
     public function edit()
@@ -73,7 +99,7 @@ class ProfileController extends Controller
         $user->save();
         
         return redirect()->route('profile.show', $user->username)
-            ->with('success', 'Profil mis à jour avec succès!');
+            ->with('success', 'Profile successfully updated!');
     }
     
     public function updatePassword(Request $request)
@@ -86,13 +112,13 @@ class ProfileController extends Controller
         $user = auth()->user();
         
         if (!Hash::check($request->current_password, $user->password)) {
-            return back()->withErrors(['current_password' => 'Le mot de passe actuel est incorrect.']);
+            return back()->withErrors(['current_password' => 'The current password is incorrect.']);
         }
         
         $user->password = Hash::make($request->password);
         $user->save();
         
         return redirect()->route('profile.edit')
-            ->with('success', 'Mot de passe mis à jour avec succès!');
+            ->with('success', 'Password updated successfully!');
     }
 }
