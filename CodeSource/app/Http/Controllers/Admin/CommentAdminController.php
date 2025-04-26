@@ -20,7 +20,7 @@ class CommentAdminController extends Controller
                   });
         }
         
-        $comments = $query->latest()->paginate(15);
+        $comments = $query->latest()->get();
         
         return view('admin.comments.index', compact('comments'));
     }
@@ -32,29 +32,10 @@ class CommentAdminController extends Controller
         return view('admin.comments.show', compact('comment'));
     }
     
-    public function edit(Comment $comment)
-    {
-        $comment->load(['user', 'post']);
-        
-        return view('admin.comments.edit', compact('comment'));
-    }
-    
-    public function update(Request $request, Comment $comment)
-    {
-        $request->validate([
-            'content' => 'required|string|max:1000',
-        ]);
-        
-        $comment->content = $request->content;
-        $comment->save();
-        
-        return redirect()->route('admin.comments.index')->with('success', 'Commentaire mis à jour avec succès.');
-    }
-    
     public function destroy(Comment $comment)
     {
         $comment->delete();
         
-        return redirect()->route('admin.comments.index')->with('success', 'Commentaire supprimé avec succès.');
+        return redirect()->route('admin.comments.index')->with('success', 'Comment successfully deleted.');
     }
 }
