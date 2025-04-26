@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\PostAdminController;
 use App\Http\Controllers\Admin\CommentAdminController;
 use App\Http\Controllers\TrendingController;
+use App\Http\Controllers\Admin\AdminProfileController;
 
 Route::get('/blocked', function () {
     return view('auth.blocked');
@@ -86,12 +87,12 @@ Route::prefix('notifications')->name('notifications.')->middleware('auth')->grou
     // Recherche
     Route::get('/search', [SearchController::class, 'index'])->name('search');
     // Routes pour les commentaires
-Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
-Route::get('/comments/{comment}/edit', [CommentController::class, 'edit'])->name('comments.edit');
-Route::put('/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');
-Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
-//trending
-Route::get('/trending', [TrendingController::class, 'index'])->name('trending.index');
+    Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
+    Route::get('/comments/{comment}/edit', [CommentController::class, 'edit'])->name('comments.edit');
+    Route::put('/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');
+    Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
+    //trending
+    Route::get('/trending', [TrendingController::class, 'index'])->name('trending.index');
 
 // Routes pour l'administration
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
@@ -110,7 +111,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     
     // Routes pour les commentaires
     Route::resource('comments', CommentAdminController::class)->only(['index', 'show', 'destroy']);
-
+    Route::get('/profile', [AdminProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [AdminProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/password', [AdminProfileController::class, 'updatePassword'])->name('profile.password.update');
 
 });
 
