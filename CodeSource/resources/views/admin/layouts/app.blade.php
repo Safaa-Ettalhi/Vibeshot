@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -183,72 +183,91 @@
 </head>
 <body>
     <div class="sidebar">
-        <div class="sidebar-logo">
-            <a href="{{ route('admin.dashboard') }}" class="vibeshot-logo">VibeShot Admin</a>
-        </div>
+    <div class="logo mb-10 pt-6">
+        <a href="{{ Auth::user()->is_admin ? route('admin.dashboard') : route('home') }}">
+             <img src="{{ asset('images/VibeShot.svg') }}" alt="VibeShot Logo">
+        </a>
+    </div>
         
-        <div class="sidebar-menu">
+        <div class="sidebar-menu mt-4">
+        @if(Auth::user()->is_admin)
             <a href="{{ route('admin.dashboard') }}" class="sidebar-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                 <i data-feather="home"></i>
-                <span>Tableau de bord</span>
+                <span>Dashboard</span>
             </a>
             
             <a href="{{ route('admin.users.index') }}" class="sidebar-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
                 <i data-feather="users"></i>
-                <span>Utilisateurs</span>
+                <span>Users</span>
             </a>
             
             <a href="{{ route('admin.posts.index') }}" class="sidebar-link {{ request()->routeIs('admin.posts.*') ? 'active' : '' }}">
                 <i data-feather="image"></i>
-                <span>Publications</span>
+                <span>Posts</span>
             </a>
             
             <a href="{{ route('admin.comments.index') }}" class="sidebar-link {{ request()->routeIs('admin.comments.*') ? 'active' : '' }}">
                 <i data-feather="message-circle"></i>
-                <span>Commentaires</span>
+                <span>Comments</span>
             </a>
+            <a href="{{ route('admin.profile.edit') }}" class="sidebar-link {{ request()->routeIs('admin.profile.*') ? 'active' : '' }}">
+                <i data-feather="user"></i>
+                <span>Mon Profil</span>
+            </a>
+            <a href="#" class="sidebar-link" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                <i data-feather="log-out"></i>
+                <span>Logout</span>
+            </a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+                @csrf
+            </form>
+            @endif
             
-            <a href="{{ route('home') }}" class="sidebar-link">
-                <i data-feather="arrow-left"></i>
-                <span>Retour au site</span>
-            </a>
         </div>
-        
+        <a href="{{ route('admin.profile.edit') }}" class="sidebar-link {{ request()->routeIs('admin.profile.*') ? 'active' : '' }}">
         <div class="sidebar-profile">
             <img src="{{ auth()->user()->profile_image ? asset('storage/' . auth()->user()->profile_image) : asset('images/default-avatar.svg') }}" alt="{{ auth()->user()->name }}" class="sidebar-profile-img">
             <div>
                 <div class="font-semibold text-white">{{ auth()->user()->name }}</div>
                 <div class="text-xs text-gray-400">{{ '@' . auth()->user()->username }}</div>
             </div>
-        </div>
+        </div></a>
     </div>
     
     <div class="admin-content">
-        <div class="header-card mb-4">
-            <div class="flex justify-between items-center">
-                <h1 class="text-xl font-bold text-white">@yield('header')</h1>
-                <div>
-                    @yield('header-actions')
-                </div>
-            </div>
-        </div>
-        
+       
+        <!-- Affichage des messages flash -->
         @if(session('success'))
-            <div class="admin-alert admin-alert-success">
-                {{ session('success') }}
+            <div class="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 flash-message flex items-center space-x-2 z-50 animate-fade-in-up max-w-[90%] sm:max-w-md">
+            <i data-feather="check-circle" class="w-5 h-5 flex-shrink-0"></i>
+            <span class="text-sm sm:text-base">  {{ session('success') }}</span>
             </div>
+            <script>
+        setTimeout(() => {
+            document.querySelector('.animate-fade-in-up').classList.add('animate-fade-out-down');
+        }, 2000);
+    </script>
         @endif
         
         @if(session('error'))
-            <div class="admin-alert admin-alert-danger">
-                {{ session('error') }}
-            </div>
-        @endif
+    <div class="fixed bottom-4 right-4 bg-red-500/90 text-white px-4 py-2 rounded-lg shadow-lg flex items-center space-x-2 z-50 animate-fade-in-up max-w-[90%] sm:max-w-md">
+        <i data-feather="alert-circle" class="w-5 h-5 flex-shrink-0"></i>
+        <span class="text-sm sm:text-base">{{ session('error') }}</span>
+    </div>
+    <script>
+        setTimeout(() => {
+            document.querySelector('.animate-fade-in-up').classList.add('animate-fade-out-down');
+        }, 2000);
+    </script>
+@endif
+        
+       
         
         @yield('content')
     </div>
     
     <div class="mobile-nav">
+    @if(Auth::user()->is_admin)
         <a href="{{ route('admin.dashboard') }}" class="mobile-nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
             <i data-feather="home"></i>
         </a>
@@ -264,10 +283,17 @@
         <a href="{{ route('admin.comments.index') }}" class="mobile-nav-link {{ request()->routeIs('admin.comments.*') ? 'active' : '' }}">
             <i data-feather="message-circle"></i>
         </a>
-        
-        <a href="{{ route('home') }}" class="mobile-nav-link">
-            <i data-feather="arrow-left"></i>
+        <a href="{{ route('admin.profile.edit') }}" class="mobile-nav-link {{ request()->routeIs('admin.profile.*') ? 'active' : '' }}">
+            <i data-feather="user"></i>
         </a>
+        
+        <a href="#" class="mobile-nav-link" onclick="event.preventDefault(); document.getElementById('logout-form-mobile').submit();">
+            <i data-feather="log-out"></i>
+        </a>
+        <form id="logout-form-mobile" action="{{ route('logout') }}" method="POST" style="display: none;">
+            @csrf
+        </form>
+        @endif
     </div>
     
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
