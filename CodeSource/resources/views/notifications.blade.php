@@ -152,7 +152,6 @@
 </div>
 
 <style>
-
 .notification-tab {
     @apply flex items-center px-6 py-4 text-gray-400 font-medium relative transition-all duration-200;
     @apply hover:text-white hover:bg-gray-800/50 cursor-pointer border-b-2 border-transparent;
@@ -198,34 +197,6 @@
 
 .notification-loader {
     @apply animate-pulse bg-gray-800/30 h-20 mb-2 rounded-lg;
-}
-
-.notification-tabs-container {
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-}
-
-.notification-tab {
-    scroll-snap-align: start;
-}
-
-@keyframes notification-enter {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.notification-item.new {
-    animation: notification-enter 0.3s ease-out;
-}
-
-.notification-item:hover .notification-actions {
-    opacity: 1;
 }
 
 @media (max-width: 640px) {
@@ -287,7 +258,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function initializeNotificationHandlers() {
-        
         document.querySelectorAll('.mark-read-form').forEach(form => {
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
@@ -330,49 +300,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             });
     }
-    let page = 1;
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                loadMoreNotifications();
-            }
-        });
-    }, {
-        rootMargin: '100px'
-    });
-    const lastNotification = document.querySelector('.notification-item:last-child');
-    if (lastNotification) {
-        observer.observe(lastNotification);
-    }
-    
-    function loadMoreNotifications() {
-        page++;
-        const activeTab = document.querySelector('.notification-tab.active');
-        const type = activeTab.getAttribute('data-type');
-        
-        fetch(`/notifications/filter/${type}?page=${page}`, {
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'Accept': 'application/json'
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.html) {
-                notificationsList.insertAdjacentHTML('beforeend', data.html);
-                feather.replace();
-                initializeNotificationHandlers();
-
-                const newLastItem = document.querySelector('.notification-item:last-child');
-                if (newLastItem) {
-                    observer.observe(newLastItem);
-                }
-            }
-        });
-    }
 
     initializeNotificationHandlers();
-    
 });
 </script>
 @endsection
