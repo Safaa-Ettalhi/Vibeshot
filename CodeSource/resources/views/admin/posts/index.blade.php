@@ -1,54 +1,48 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Gestion des publications')
-
-@section('header', 'Gestion des publications')
-
-@section('header-actions')
-<div class="relative">
-    <form action="{{ route('admin.posts.index') }}" method="GET" class="flex items-center rounded-full border border-gray-600  px-4 py-2 ">
-        <i data-feather="search" class="text-gray-400 mr-2"></i>
+@section('title', 'Posts Management')
+@section('content')
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+    <h1 class="text-xl sm:text-2xl font-bold text-white">Posts Management</h1>   
+    <form action="{{ route('admin.posts.index') }}" method="GET" class="flex items-center rounded-full border border-gray-600 px-3 sm:px-4 py-1.5 sm:py-2 w-full sm:w-auto">
+        <i data-feather="search" class="text-gray-400 w-4 h-4 mr-2"></i>
         <input 
             type="text" 
             name="search" 
-            placeholder="Rechercher une publication..." 
+            placeholder="Search for a post..." 
             value="{{ request('search') }}"
-            class="bg-transparent focus:outline-none text-white placeholder-gray-400 w-full"
+            class="bg-transparent focus:outline-none text-white placeholder-gray-400 w-full text-sm"
         >
     </form>
 </div>
-@endsection
+<div class="admin-card bg-[#111111] rounded-xl border border-gray-800/50 shadow-lg overflow-hidden">
 
-
-@section('content')
-<div class="admin-card bg-[#111111]">
-
-    {{-- Version mobile (cartes) --}}
-    <div class="block md:hidden p-4">
+    <!-- Mobile view -->
+    <div class="block md:hidden p-3 sm:p-4">
         @foreach($posts as $post)
-        <div class="bg-[#111111] border border-gray-800 rounded-lg shadow p-4 mb-4">
+        <div class="bg-[#111111] border border-gray-800 rounded-lg shadow p-3 sm:p-4 mb-4">
             <div class="flex items-start gap-3 mb-3">
-            @if($post->image_path)
-    <img src="{{ asset('storage/' . $post->image_path) }}?t={{ time() }}" alt="Post" class="w-16 h-16 rounded-lg object-cover">
-@elseif($post->images->count() > 0)
-    <img src="{{ asset('storage/' . $post->images->first()->image_path) }}?t={{ time() }}" alt="Post" class="w-16 h-16 rounded-lg object-cover">
-@else
-    <div class="w-16 h-16 rounded-lg bg-gray-700 flex items-center justify-center">
-        <i data-feather="image" class="text-gray-500 w-5 h-5"></i>
-    </div>
-@endif
-                <div class="flex-1">
+                @if($post->image_path)
+                    <img src="{{ asset('storage/' . $post->image_path) }}?t={{ time() }}" alt="Post" class="w-14 h-14 sm:w-16 sm:h-16 rounded-lg object-cover">
+                @elseif($post->images->count() > 0)
+                    <img src="{{ asset('storage/' . $post->images->first()->image_path) }}?t={{ time() }}" alt="Post" class="w-14 h-14 sm:w-16 sm:h-16 rounded-lg object-cover">
+                @else
+                    <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-lg bg-gray-700 flex items-center justify-center">
+                        <i data-feather="image" class="text-gray-500 w-5 h-5"></i>
+                    </div>
+                @endif
+                <div class="flex-1 min-w-0">
                     <h3 class="text-white font-semibold text-sm truncate">{{ Str::limit($post->caption, 50) }}</h3>
-                    <div class="flex items-center gap-2 mt-1 text-gray-400 text-sm">
-                        <img src="{{ $post->user->profile_image ? asset('storage/' . $post->user->profile_image) : asset('images/default-avatar.svg') }}" alt="{{ $post->user->name }}" class="w-6 h-6 rounded-full object-cover">
-                        {{ $post->user->name }}
+                    <div class="flex items-center gap-2 mt-1 text-gray-400 text-xs sm:text-sm">
+                        <img src="{{ $post->user->profile_image ? asset('storage/' . $post->user->profile_image) : asset('images/default-avatar.svg') }}" alt="{{ $post->user->name }}" class="w-5 h-5 sm:w-6 sm:h-6 rounded-full object-cover">
+                        <span class="truncate max-w-[120px]">{{ $post->user->name }}</span>
                     </div>
                 </div>
             </div>
 
-            <div class="flex flex-wrap items-center justify-between text-sm text-gray-400 gap-2 mb-3">
+            <div class="flex flex-wrap items-center justify-between text-xs sm:text-sm text-gray-400 gap-2 mb-3">
                 <div>
-                    <span class="font-medium text-white">{{ $post->original_post_id ? 'Partagé' : 'Original' }}</span>
+                    <span class="font-medium text-white">{{ $post->original_post_id ? 'Shared' : 'Original' }}</span>
                 </div>
                 <div class="flex items-center gap-3">
                     <span class="flex items-center gap-1"><i data-feather="heart" class="w-3 h-3"></i> {{ $post->likes->count() }}</span>
@@ -59,43 +53,42 @@
 
             <div class="flex items-center justify-between text-xs mb-3">
                 <div class="text-gray-500">
-                    Publié le {{ $post->created_at->format('d/m/Y H:i') }}
+                    {{ $post->created_at->format('d/m/Y H:i') }}
                 </div>
                 <div>
                     @if($post->is_hidden)
-                        <span class="admin-badge admin-badge-danger">Masqué</span>
+                        <span class="admin-badge admin-badge-danger">Hidden</span>
                     @else
                         <span class="admin-badge admin-badge-success">Visible</span>
                     @endif
                 </div>
             </div>
 
-            <div class="flex gap-2">
-                <a href="{{ route('admin.posts.show', $post) }}" class="admin-btn admin-btn-secondary admin-btn-sm">
+            <div class="flex justify-end gap-2">
+                <a href="{{ route('admin.posts.show', $post) }}" class="admin-btn admin-btn-secondary admin-btn-sm" title="View">
                     <i data-feather="eye" class="w-4 h-4"></i>
                 </a>
                 
-               
                 @if($post->is_hidden)
                     <form action="{{ route('admin.posts.unhide', $post) }}" method="POST" class="inline">
                         @csrf
-                        <button type="submit" class="admin-btn admin-btn-success admin-btn-sm" title="Rendre visible">
+                        <button type="submit" class="admin-btn admin-btn-success admin-btn-sm" title="Make visible">
                             <i data-feather="eye" class="w-4 h-4"></i>
                         </button>
                     </form>
                 @else
                     <form action="{{ route('admin.posts.hide', $post) }}" method="POST" class="inline">
                         @csrf
-                        <button type="submit" class="admin-btn admin-btn-warning admin-btn-sm" title="Masquer">
+                        <button type="submit" class="admin-btn admin-btn-warning admin-btn-sm" title="Hide">
                             <i data-feather="eye-off" class="w-4 h-4"></i>
                         </button>
                     </form>
                 @endif
               
-                <form action="{{ route('admin.posts.destroy', $post) }}" method="POST" class="inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette publication ?');">
+                <form action="{{ route('admin.posts.destroy', $post) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this post?');">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="admin-btn admin-btn-danger admin-btn-sm">
+                    <button type="submit" class="admin-btn admin-btn-danger admin-btn-sm" title="Delete">
                         <i data-feather="trash-2" class="w-4 h-4"></i>
                     </button>
                 </form>
@@ -104,92 +97,92 @@
         @endforeach
     </div>
 
-    <div class="hidden md:block">
-        <div class="admin-card-body p-0">
-            <table class="admin-table">
+    <!-- Desktop view -->
+    <div class="hidden md:block overflow-x-auto">
+        <div class="admin-card-body p-0 min-w-full">
+            <table class="w-full">
                 <thead>
-                    <tr>
-                        <th>Publication</th>
-                        <th>Auteur</th>
-                        <th>Type</th>
-                        <th>Statut</th>
-                        <th>Engagement</th>
-                        <th>Date</th>
-                        <th>Actions</th>
+                    <tr class="bg-[#0a0a0a]">
+                        <th class="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Post</th>
+                        <th class="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Author</th>
+                        <th class="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Type</th>
+                        <th class="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Status</th>
+                        <th class="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Engagement</th>
+                        <th class="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Date</th>
+                        <th class="px-4 lg:px-6 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="divide-y divide-gray-800/30">
                     @foreach($posts as $post)
-                    <tr>
-                        <td>
+                    <tr class="hover:bg-[#161616] transition-colors">
+                        <td class="px-4 lg:px-6 py-4 whitespace-nowrap">
                             <div class="flex items-center gap-3">
-                            @if($post->image_path)
-    <img src="{{ asset('storage/' . $post->image_path) }}?t={{ time() }}" alt="Post" class="w-12 h-12 rounded-lg object-cover">
-@elseif($post->images->count() > 0)
-    <img src="{{ asset('storage/' . $post->images->first()->image_path) }}?t={{ time() }}" alt="Post" class="w-12 h-12 rounded-lg object-cover">
-@else
-    <div class="w-12 h-12 rounded-lg bg-gray-800 flex items-center justify-center">
-        <i data-feather="image" class="text-gray-600 w-5 h-5"></i>
-    </div>
-@endif
-                                <div class="font-medium text-white truncate max-w-[200px]">{{ Str::limit($post->caption, 40) }}</div>
+                                @if($post->image_path)
+                                    <img src="{{ asset('storage/' . $post->image_path) }}?t={{ time() }}" alt="Post" class="w-10 h-10 lg:w-12 lg:h-12 rounded-lg object-cover">
+                                @elseif($post->images->count() > 0)
+                                    <img src="{{ asset('storage/' . $post->images->first()->image_path) }}?t={{ time() }}" alt="Post" class="w-10 h-10 lg:w-12 lg:h-12 rounded-lg object-cover">
+                                @else
+                                    <div class="w-10 h-10 lg:w-12 lg:h-12 rounded-lg bg-gray-800 flex items-center justify-center">
+                                        <i data-feather="image" class="text-gray-600 w-5 h-5"></i>
+                                    </div>
+                                @endif
+                                <div class="font-medium text-white truncate max-w-[120px] md:max-w-[150px] lg:max-w-[200px]">{{ Str::limit($post->caption, 40) }}</div>
                             </div>
                         </td>
-                        <td>
+                        <td class="px-4 lg:px-6 py-4 whitespace-nowrap">
                             <div class="flex items-center gap-2">
-                                <img src="{{ $post->user->profile_image ? asset('storage/' . $post->user->profile_image) : asset('images/default-avatar.svg') }}" alt="{{ $post->user->name }}" class="w-8 h-8 rounded-full object-cover">
-                                <div class="text-gray-300">{{ $post->user->name }}</div>
+                                <img src="{{ $post->user->profile_image ? asset('storage/' . $post->user->profile_image) : asset('images/default-avatar.svg') }}" alt="{{ $post->user->name }}" class="w-7 h-7 lg:w-8 lg:h-8 rounded-full object-cover">
+                                <div class="text-gray-300 truncate max-w-[100px]">{{ $post->user->name }}</div>
                             </div>
                         </td>
-                        <td>
+                        <td class="px-4 lg:px-6 py-4 whitespace-nowrap">
                             @if($post->original_post_id)
-                                <span class="admin-badge admin-badge-secondary">Partagé</span>
+                                <span class="admin-badge admin-badge-secondary">Shared</span>
                             @else
                                 <span class="admin-badge admin-badge-primary">Original</span>
                             @endif
                         </td>
-                        <td>
+                        <td class="px-4 lg:px-6 py-4 whitespace-nowrap">
                             @if($post->is_hidden)
-                                <span class="admin-badge admin-badge-danger">Masqué</span>
+                                <span class="admin-badge admin-badge-danger">Hidden</span>
                             @else
                                 <span class="admin-badge admin-badge-success">Visible</span>
                             @endif
                         </td>
-                        <td>
+                        <td class="px-4 lg:px-6 py-4 whitespace-nowrap">
                             <div class="flex items-center gap-3 text-gray-400 text-sm">
                                 <span class="flex items-center gap-1"><i data-feather="heart" class="w-3 h-3"></i> {{ $post->likes->count() }}</span>
                                 <span class="flex items-center gap-1"><i data-feather="message-circle" class="w-3 h-3"></i> {{ $post->comments->count() }}</span>
                                 <span class="flex items-center gap-1"><i data-feather="repeat" class="w-3 h-3"></i> {{ $post->shares->count() }}</span>
                             </div>
                         </td>
-                        <td class="text-gray-400 text-sm">{{ $post->created_at->format('d/m/Y H:i') }}</td>
-                        <td>
-                            <div class="flex gap-2">
-                                <a href="{{ route('admin.posts.show', $post) }}" class="admin-btn admin-btn-secondary admin-btn-sm">
+                        <td class="px-4 lg:px-6 py-4 whitespace-nowrap text-gray-400 text-sm">{{ $post->created_at->format('d/m/Y H:i') }}</td>
+                        <td class="px-4 lg:px-6 py-4 whitespace-nowrap text-right">
+                            <div class="flex justify-end gap-2">
+                                <a href="{{ route('admin.posts.show', $post) }}" class="admin-btn admin-btn-secondary admin-btn-sm" title="View">
                                     <i data-feather="eye" class="w-4 h-4"></i>
                                 </a>
                                 
-                               
                                 @if($post->is_hidden)
                                     <form action="{{ route('admin.posts.unhide', $post) }}" method="POST" class="inline">
                                         @csrf
-                                        <button type="submit" class="admin-btn admin-btn-success admin-btn-sm" title="Rendre visible">
+                                        <button type="submit" class="admin-btn admin-btn-success admin-btn-sm" title="Make visible">
                                             <i data-feather="eye" class="w-4 h-4"></i>
                                         </button>
                                     </form>
                                 @else
                                     <form action="{{ route('admin.posts.hide', $post) }}" method="POST" class="inline">
                                         @csrf
-                                        <button type="submit" class="admin-btn admin-btn-warning admin-btn-sm" title="Masquer">
+                                        <button type="submit" class="admin-btn admin-btn-warning admin-btn-sm" title="Hide">
                                             <i data-feather="eye-off" class="w-4 h-4"></i>
                                         </button>
                                     </form>
                                 @endif
                               
-                                <form action="{{ route('admin.posts.destroy', $post) }}" method="POST" class="inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette publication ?');">
+                                <form action="{{ route('admin.posts.destroy', $post) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this post?');">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="admin-btn admin-btn-danger admin-btn-sm">
+                                    <button type="submit" class="admin-btn admin-btn-danger admin-btn-sm" title="Delete">
                                         <i data-feather="trash-2" class="w-4 h-4"></i>
                                     </button>
                                 </form>
@@ -202,36 +195,7 @@
         </div>
     </div>
 
-    <div class="admin-card-footer">
-        <div class="admin-pagination">
-            {{ $posts->links() }}
-        </div>
-    </div>
 </div>
-
-@if(session('success'))
-    <div class="fixed bottom-4 right-4 bg-green-500/90 text-white px-4 py-2 rounded-lg shadow-lg flex items-center space-x-2 z-50 animate-fade-in-up">
-        <i data-feather="check-circle" class="w-5 h-5"></i>
-        <span>{{ session('success') }}</span>
-    </div>
-    <script>
-        setTimeout(() => {
-            document.querySelector('.animate-fade-in-up').classList.add('animate-fade-out-down');
-        }, 3000);
-    </script>
-@endif
-
-@if(session('error'))
-    <div class="fixed bottom-4 right-4 bg-red-500/90 text-white px-4 py-2 rounded-lg shadow-lg flex items-center space-x-2 z-50 animate-fade-in-up">
-        <i data-feather="alert-circle" class="w-5 h-5"></i>
-        <span>{{ session('error') }}</span>
-    </div>
-    <script>
-        setTimeout(() => {
-            document.querySelector('.animate-fade-in-up').classList.add('animate-fade-out-down');
-        }, 3000);
-    </script>
-@endif
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -244,121 +208,8 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <style>
-.animate-fade-in-up {
-    animation: fadeInUp 0.3s ease-out forwards;
-}
-
-.animate-fade-out-down {
-    animation: fadeOutDown 0.3s ease-out forwards;
-}
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes fadeOutDown {
-    from {
-        opacity: 1;
-        transform: translateY(0);
-    }
-    to {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-}
-
-.admin-pagination {
-    display: flex;
-    justify-content: center;
-}
-
-.admin-pagination > nav {
-    display: inline-flex;
-}
-
-.admin-pagination .flex.justify-between {
-    display: none;
-}
-
-.admin-pagination .relative.inline-flex.items-center {
-    margin: 0 2px;
-}
-
-.admin-pagination .relative.inline-flex.items-center a,
-.admin-pagination .relative.inline-flex.items-center span {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 32px;
-    height: 32px;
-    padding: 0 10px;
-    border-radius: 6px;
-    font-size: 14px;
-    transition: all 0.2s;
-}
-
-.admin-pagination a {
-    background-color: rgba(255, 255, 255, 0.05);
-    color: #e0e0e0;
-}
-
-.admin-pagination a:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-.admin-pagination span.bg-blue-50 {
-    background-color: rgba(59, 130, 246, 0.2) !important;
-    color: #3b82f6;
-}
-
-.admin-pagination .text-gray-500 {
-    color: rgba(255, 255, 255, 0.3);
-}
-
-.search-input {
-    position: relative;
-    width: 300px;
-}
-
-.search-input i {
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #6b7280;
-    width: 16px;
-    height: 16px;
-}
-
-.search-input input {
-    width: 100%;
-    background-color: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: white;
-    padding: 8px 12px 8px 36px;
-    border-radius: 8px;
-    transition: all 0.2s;
-}
-
-.search-input input:focus {
-    outline: none;
-    border-color: rgba(59, 130, 246, 0.5);
-    background-color: rgba(255, 255, 255, 0.08);
-}
-
-.search-input input::placeholder {
-    color: #6b7280;
-}
-
 .admin-btn {
-    padding: 8px 16px;
+    padding: 8px 12px;
     border-radius: 8px;
     font-weight: 600;
     cursor: pointer;
@@ -367,7 +218,7 @@ document.addEventListener('DOMContentLoaded', function() {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 6px;
 }
 
 .admin-btn-primary {
@@ -421,18 +272,26 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 
 .admin-btn-sm {
-    padding: 6px 12px;
-    font-size: 0.875rem;
+    padding: 5px 10px;
+    font-size: 0.75rem;
 }
 
 .admin-badge {
-    padding: 4px 10px;
+    padding: 3px 8px;
     border-radius: 20px;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 600;
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 3px;
+}
+
+@media (min-width: 640px) {
+    .admin-badge {
+        padding: 4px 10px;
+        font-size: 0.75rem;
+        gap: 4px;
+    }
 }
 
 .admin-badge-primary {
