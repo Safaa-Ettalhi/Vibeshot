@@ -97,7 +97,6 @@
 </div>
 
 <style>
-    
     .hide-scrollbar {
         -ms-overflow-style: none; 
         scrollbar-width: none; 
@@ -105,24 +104,7 @@
     .hide-scrollbar::-webkit-scrollbar {
         display: none;  
     }
-    .unsave-form button {
-        transition: all 0.2s ease;
-    }
-    
-    .unsave-form button:hover {
-        background-color: rgba(0, 0, 0, 0.7);
-    }
-
-    .unsave-form button svg {
-        color: white;
-        fill: white;
-    }
-    .unsave-form button:hover {
-        transform: scale(1.05);
-    }
 </style>
-
-@push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         if (typeof feather !== 'undefined') {
@@ -130,26 +112,6 @@
                 'stroke-width': 1.5
             });
         }
-        const unsaveButtons = document.querySelectorAll('.unsave-form button');
-        unsaveButtons.forEach(button => {
-            const tooltip = document.createElement('div');
-            tooltip.className = 'absolute bottom-12 left-3 bg-black bg-opacity-80 text-white text-xs py-1 px-2 rounded opacity-0 transition-opacity duration-200';
-            tooltip.textContent = 'Click to unsave';
-            tooltip.style.pointerEvents = 'none';
-
-            button.parentNode.appendChild(tooltip);
-
-            button.addEventListener('mouseenter', () => {
-                tooltip.classList.remove('opacity-0');
-                tooltip.classList.add('opacity-100');
-            });
-
-            button.addEventListener('mouseleave', () => {
-                tooltip.classList.remove('opacity-100');
-                tooltip.classList.add('opacity-0');
-            });
-        });
     });
 </script>
-@endpush
 @endsection
