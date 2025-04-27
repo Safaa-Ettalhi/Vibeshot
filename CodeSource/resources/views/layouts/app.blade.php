@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -18,22 +18,17 @@
         }
     </style>
 </head>
-<body class="">
+<body >
     @auth
     <div class="sidebar ">
     <div class="logo mb-10 pt-6">
-        <a href="{{ route('home') }}">
+        <a href="{{ Auth::user()->is_admin ? route('admin.dashboard') : route('home') }}">
              <img src="{{ asset('images/VibeShot.svg') }}" alt="VibeShot Logo">
         </a>
     </div>
-    @if(Auth::check() && Auth::user()->is_admin)
-    <a href="{{ route('admin.dashboard') }}" class="sidebar-link">
-        <i data-feather="settings"></i>
-        <span>Administration</span>
-    </a>
-    @endif
     
     <div class="sidebar-menu mt-4">
+                @if(!Auth::user()->is_admin)
                 <a href="{{ route('home') }}" class="sidebar-link {{ request()->routeIs('home') ? 'active' : '' }}">
                     <i data-feather="home"></i>
                     <span>Home</span>
@@ -68,6 +63,7 @@
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
                     @csrf
                 </form>
+                @endif 
             </div>
             <a href="{{ route('profile.show', auth()->user()->username) }}">
             <div class="sidebar-profile">
@@ -85,18 +81,18 @@
     <i data-feather="log-out"></i>
 </a>
 
-
 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
     @csrf
 </form>
 
-            <a href="{{ route('bookmarks.index') }}" class="mobile-nav-link {{ request()->routeIs('home') ? 'active' : '' }}">
+            @if(!Auth::user()->is_admin)
+            <a href="{{ route('bookmarks.index') }}" class="mobile-nav-link {{ request()->routeIs('bookmarks.*') ? 'active' : '' }}">
                <i data-feather="bookmark"></i>
             </a>
             <a href="{{ route('search') }}" class="mobile-nav-link {{ request()->routeIs('search') ? 'active' : '' }}">
                 <i data-feather="search"></i>
             </a>
-            <a href="{{ route('home') }}" class="mobile-nav-link {{ request()->routeIs('post.create') ? 'active' : '' }}">
+            <a href="{{ route('home') }}" class="mobile-nav-link {{ request()->routeIs('home') ? 'active' : '' }}">
                 <i data-feather="home"></i>
             </a>
             <a href="{{ route('notifications.index') }}" class="mobile-nav-link {{ request()->routeIs('notifications.*') ? 'active' : '' }}">
@@ -109,6 +105,7 @@
                     @endif
                 </div>
             </a>
+            @endif
             <a href="{{ route('profile.show', auth()->user()->username) }}" class="mobile-nav-link {{ request()->routeIs('profile.show') && request()->username == auth()->user()->username ? 'active' : '' }}">
                 <i data-feather="user"></i>
             </a>
