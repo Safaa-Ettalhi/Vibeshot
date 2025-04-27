@@ -3,14 +3,7 @@
 @section('content')
 <div class="edit-profile-container container">
     <div class="edit-profile-wrapper ">
-        <h1 class="edit-profile-title text-2xl font-bold mb-6">Edit Profile</h1>
-        
-        @if(session('success'))
-            <div class="success-alert bg-green-500 text-white p-4 rounded-md mb-6">
-                {{ session('success') }}
-            </div>
-        @endif
-        
+        <h1 class="edit-profile-title text-2xl font-bold mt-6 mb-6">Edit Profile</h1>        
         <div class="profile-info-card card mb-6">
             <div class="card-header profile-header">
                 <h2 class="profile-section-title font-semibold">Profile Information</h2>
