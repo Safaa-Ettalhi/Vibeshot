@@ -53,7 +53,8 @@ a {
   display: flex;
   flex-direction: column;
   z-index: 30;
-  border-right: 1px solid rgba(110, 118, 125, 0.2);
+  border-right: 2px solid rgb(55 65 81 / 0.7);
+  border-radius: 0 30px 30px 0;
 }
 
 .main-content {
@@ -1064,7 +1065,6 @@ a {
 
 .edit-profile-container {
   color: var(--text-primary);
-  padding: 2rem 1rem;
   margin: 0 auto;
 }
 
