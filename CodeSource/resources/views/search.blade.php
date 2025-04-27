@@ -1,5 +1,6 @@
 @extends('layouts.app')
 
+@section('title', 'Explore')
 @section('content')
 <div class="container bg-black">
     <div class="w-full max-w-5xl mx-auto p-6">

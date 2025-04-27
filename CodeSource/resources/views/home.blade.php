@@ -1,5 +1,6 @@
 @extends('layouts.app')
 
+@section('title', 'Home')
 @section('content')
 <div class="container bg-black min-h-screen">
     <div class="flex flex-col md:flex-row gap-6 py-4">

@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', 'Edit Profile')
 @section('content')
 <div class="edit-profile-container container">
     <div class="edit-profile-wrapper ">

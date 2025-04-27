@@ -1,5 +1,6 @@
 @extends('layouts.app')
 
+@section('title', 'Edit Comment')
 @section('content')
 <div class="container">
     <div class="max-w-2xl mx-auto">

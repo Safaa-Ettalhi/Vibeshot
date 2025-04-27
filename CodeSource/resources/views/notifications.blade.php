@@ -1,5 +1,6 @@
 @extends('layouts.app')
 
+@section('title', 'Notifications')
 @section('content')
 <div class="container bg-black min-h-screen">
     <div class="max-w-4xl mx-auto py-6 px-4 sm:px-6 lg:px-8">

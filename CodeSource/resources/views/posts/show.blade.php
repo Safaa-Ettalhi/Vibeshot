@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', 'Show post')
 @section('content')
 <div class="container">
     <div class="max-w-2xl mx-auto">
