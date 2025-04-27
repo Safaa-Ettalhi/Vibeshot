@@ -1,19 +1,18 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Tableau de bord')
-
-@section('header', 'Tableau de bord')
+@section('title', 'Dashboard')
 
 @section('content')
+<h1 class="text-2xl font-bold mb-6">Dashboard</h1>
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-   
+
     <div class="bg-[#111111]/90 rounded-xl border border-gray-800/50 shadow-lg backdrop-blur-sm hover:shadow-blue-900/10 hover:border-gray-700/50 transition-all duration-300">
         <div class="p-6 flex items-center">
             <div class="bg-blue-500/10 p-4 rounded-xl mr-5">
                 <i data-feather="users" class="text-blue-500 w-6 h-6"></i>
             </div>
             <div>
-                <div class="text-sm font-medium text-gray-400 mb-1">Utilisateurs</div>
+                <div class="text-sm font-medium text-gray-400 mb-1">Users</div>
                 <div class="text-3xl font-bold text-white">{{ number_format($stats['users_count']) }}</div>
             </div>
             <div class="ml-auto text-blue-500/70">
@@ -29,7 +28,7 @@
                 <i data-feather="image" class="text-green-500 w-6 h-6"></i>
             </div>
             <div>
-                <div class="text-sm font-medium text-gray-400 mb-1">Publications</div>
+                <div class="text-sm font-medium text-gray-400 mb-1">Posts</div>
                 <div class="text-3xl font-bold text-white">{{ number_format($stats['posts_count']) }}</div>
             </div>
             <div class="ml-auto text-green-500/70">
@@ -45,7 +44,7 @@
                 <i data-feather="message-circle" class="text-purple-500 w-6 h-6"></i>
             </div>
             <div>
-                <div class="text-sm font-medium text-gray-400 mb-1">Commentaires</div>
+                <div class="text-sm font-medium text-gray-400 mb-1">Comments</div>
                 <div class="text-3xl font-bold text-white">{{ number_format($stats['comments_count']) }}</div>
             </div>
             <div class="ml-auto text-purple-500/70">
@@ -62,10 +61,10 @@
         <div class="px-6 py-5 flex justify-between items-center border-b border-gray-800/50">
             <h3 class="font-semibold text-lg text-white flex items-center">
                 <i data-feather="users" class="w-5 h-5 mr-2 text-blue-500"></i>
-                Utilisateurs récents
+                Recent Users
             </h3>
             <a href="{{ route('admin.users.index') }}" class="text-blue-500 hover:text-blue-400 text-sm flex items-center transition-colors">
-                Voir tous
+                View all
                 <i data-feather="chevron-right" class="ml-1 w-4 h-4"></i>
             </a>
         </div>
@@ -73,7 +72,7 @@
             <table class="w-full">
                 <thead>
                     <tr class="bg-[#0a0a0a]">
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Utilisateur</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">User</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Email</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Date</th>
                         <th class="px-6 py-3 text-right"></th>
@@ -95,7 +94,7 @@
                         <td class="px-6 py-4 text-gray-400 text-sm">{{ $user->created_at->format('d/m/Y') }}</td>
                         <td class="px-6 py-4 text-right">
                             <a href="{{ route('admin.users.show', $user) }}" class="inline-flex items-center px-3 py-1.5 bg-[#222222] hover:bg-[#333333] text-white text-xs font-medium rounded-full transition-colors">
-                                <span>Voir</span>
+                                <span>View</span>
                                 <i data-feather="eye" class="ml-1 w-3.5 h-3.5"></i>
                             </a>
                         </td>
@@ -111,10 +110,10 @@
         <div class="px-6 py-5 flex justify-between items-center border-b border-gray-800/50">
             <h3 class="font-semibold text-lg text-white flex items-center">
                 <i data-feather="image" class="w-5 h-5 mr-2 text-green-500"></i>
-                Publications récentes
+                Recent Posts
             </h3>
             <a href="{{ route('admin.posts.index') }}" class="text-green-500 hover:text-green-400 text-sm flex items-center transition-colors">
-                Voir toutes
+                View all
                 <i data-feather="chevron-right" class="ml-1 w-4 h-4"></i>
             </a>
         </div>
@@ -122,8 +121,8 @@
             <table class="w-full">
                 <thead>
                     <tr class="bg-[#0a0a0a]">
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Publication</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Auteur</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Post</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Author</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Date</th>
                         <th class="px-6 py-3 text-right"></th>
                     </tr>
@@ -142,14 +141,14 @@
                                         <i data-feather="image" class="text-gray-500 w-5 h-5"></i>
                                     </div>
                                 @endif
-                                <div class="font-medium text-white truncate max-w-[150px]">{{ Str::limit($post->caption, 30) ?: 'Sans légende' }}</div>
+                                <div class="font-medium text-white truncate max-w-[150px]">{{ Str::limit($post->caption, 30) ?: 'No caption' }}</div>
                             </div>
                         </td>
                         <td class="px-6 py-4 text-gray-300">{{ $post->user->name }}</td>
                         <td class="px-6 py-4 text-gray-400 text-sm">{{ $post->created_at->format('d/m/Y') }}</td>
                         <td class="px-6 py-4 text-right">
                             <a href="{{ route('admin.posts.show', $post) }}" class="inline-flex items-center px-3 py-1.5 bg-[#222222] hover:bg-[#333333] text-white text-xs font-medium rounded-full transition-colors">
-                                <span>Voir</span>
+                                <span>View</span>
                                 <i data-feather="eye" class="ml-1 w-3.5 h-3.5"></i>
                             </a>
                         </td>
@@ -166,10 +165,10 @@
     <div class="px-6 py-5 flex justify-between items-center border-b border-gray-800/50">
         <h3 class="font-semibold text-lg text-white flex items-center">
             <i data-feather="message-circle" class="w-5 h-5 mr-2 text-purple-500"></i>
-            Commentaires récents
+            Recent Comments
         </h3>
         <a href="{{ route('admin.comments.index') }}" class="text-purple-500 hover:text-purple-400 text-sm flex items-center transition-colors">
-            Voir tous
+            View all
             <i data-feather="chevron-right" class="ml-1 w-4 h-4"></i>
         </a>
     </div>
@@ -177,9 +176,9 @@
         <table class="w-full">
             <thead>
                 <tr class="bg-[#0a0a0a]">
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Auteur</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Commentaire</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Publication</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Author</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Comment</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Post</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Date</th>
                     <th class="px-6 py-3 text-right"></th>
                 </tr>
@@ -194,12 +193,12 @@
                         </div>
                     </td>
                     <td class="px-6 py-4 text-gray-300 truncate max-w-[300px]">{{ $comment->content }}</td>
-                    <td class="px-6 py-4 text-gray-400 truncate max-w-[150px]">{{ Str::limit($comment->post->caption, 20) ?: 'Sans légende' }}</td>
+                    <td class="px-6 py-4 text-gray-400 truncate max-w-[150px]">{{ Str::limit($comment->post->caption, 20) ?: 'No caption' }}</td>
                     <td class="px-6 py-4 text-gray-400 text-sm">{{ $comment->created_at->format('d/m/Y H:i') }}</td>
                     <td class="px-6 py-4 text-right">
                         <div class="flex justify-end space-x-2">
                             <a href="{{ route('admin.comments.show', $comment) }}" class="inline-flex items-center px-3 py-1.5 bg-[#222222] hover:bg-[#333333] text-white text-xs font-medium rounded-full transition-colors">
-                                <span>Voir</span>
+                                <span>View</span>
                                 <i data-feather="eye" class="ml-1 w-3.5 h-3.5"></i>
                             </a>
                         </div>
