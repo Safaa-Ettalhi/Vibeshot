@@ -309,29 +309,6 @@
   width: 0;
   height: 0;
 }
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.search-result-animation {
-  animation: fadeIn 0.3s ease-out forwards;
-}
-
-#searchInput:focus {
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
-}
-
-.transition-all {
-  transition-duration: 300ms;
-}
-
-.bg-gray-900\/50:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-  border-color: rgba(75, 85, 99, 0.5);
-}
 </style>
 
 <script>
@@ -431,31 +408,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             refreshPreviews();
         });
-    }
-
-    const postCards = document.querySelectorAll('#posts-container > div');
-    postCards.forEach((card, index) => {
-        card.classList.add('search-result-animation');
-        card.style.animationDelay = `${index * 0.05}s`;
-    });
-
-    const searchIcon = document.querySelector('.ri-search-line');
-    if (searchIcon) {
-        searchIcon.addEventListener('click', function() {
-            document.getElementById('searchInput').focus();
-        });
-    }
-    if (window.innerWidth < 768) {
-        const searchInput = document.getElementById('searchInput');
-        if (searchInput) {
-            searchInput.addEventListener('focus', function() {
-                this.placeholder = 'Search...';
-            });
-            
-            searchInput.addEventListener('blur', function() {
-                this.placeholder = 'Search';
-            });
-        }
     }
 });
 </script>
