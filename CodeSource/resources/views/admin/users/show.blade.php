@@ -1,21 +1,11 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Détails de l\'utilisateur')
-
-@section('header', 'Détails de l\'utilisateur')
-
-@section('header-actions')
-<div class="flex gap-3">
-    <a href="{{ route('admin.users.edit', $user) }}" class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors">
-        <i data-feather="edit" class="w-4 h-4 mr-2"></i> Modifier
-    </a>
-    <a href="{{ route('admin.users.index') }}" class="inline-flex items-center px-4 py-2 bg-[#222222] hover:bg-[#333333] text-white font-medium rounded-lg transition-colors">
-        <i data-feather="arrow-left" class="w-4 h-4 mr-2"></i> Retour
-    </a>
-</div>
-@endsection
-
+@section('title', 'User Details')
 @section('content')
+<div class="mb-6">
+    
+<h1 class="text-2xl font-bold text-white">User Details</h1>
+ </div>
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
     
     <div class="bg-[#111111]/90 rounded-xl border border-gray-800/50 shadow-lg backdrop-blur-sm overflow-hidden md:col-span-1">
@@ -47,11 +37,11 @@
                 </div>
                 <div class="text-center">
                     <div class="text-xl font-bold text-white">{{ $user->followers->count() }}</div>
-                    <div class="text-xs text-gray-400 uppercase tracking-wide">Abonnés</div>
+                    <div class="text-xs text-gray-400 uppercase tracking-wide">Followers</div>
                 </div>
                 <div class="text-center">
                     <div class="text-xl font-bold text-white">{{ $user->following->count() }}</div>
-                    <div class="text-xs text-gray-400 uppercase tracking-wide">Abonnements</div>
+                    <div class="text-xs text-gray-400 uppercase tracking-wide">Following</div>
                 </div>
             </div>
             
@@ -67,7 +57,7 @@
                         <div class="bg-green-500/10 p-2 rounded-lg">
                             <i data-feather="calendar" class="text-green-500 w-5 h-5"></i>
                         </div>
-                        <span class="text-gray-300">Inscrit le {{ $user->created_at->format('d/m/Y') }}</span>
+                        <span class="text-gray-300">Registered on {{ $user->created_at->format('d/m/Y') }}</span>
                     </div>
                 </div>
             </div>
@@ -80,17 +70,17 @@
             <div class="px-6 py-5 border-b border-gray-800/50">
                 <h3 class="font-semibold text-lg text-white flex items-center">
                     <i data-feather="user" class="w-5 h-5 mr-2 text-blue-500"></i>
-                    Informations
+                    Information
                 </h3>
             </div>
             <div class="p-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <div class="text-sm font-medium text-gray-400 mb-2">Nom</div>
+                        <div class="text-sm font-medium text-gray-400 mb-2">Name</div>
                         <div class="text-white bg-[#191919] px-4 py-3 rounded-lg">{{ $user->name }}</div>
                     </div>
                     <div>
-                        <div class="text-sm font-medium text-gray-400 mb-2">Nom d'utilisateur</div>
+                        <div class="text-sm font-medium text-gray-400 mb-2">Username</div>
                         <div class="text-white bg-[#191919] px-4 py-3 rounded-lg">{{ $user->username }}</div>
                     </div>
                     <div>
@@ -98,7 +88,7 @@
                         <div class="text-white bg-[#191919] px-4 py-3 rounded-lg">{{ $user->email }}</div>
                     </div>
                     <div>
-                        <div class="text-sm font-medium text-gray-400 mb-2">Rôle</div>
+                        <div class="text-sm font-medium text-gray-400 mb-2">Role</div>
                         <div class="bg-[#191919] px-4 py-3 rounded-lg">
                             @if($user->is_admin)
                                 <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-500/20 text-blue-500">
@@ -106,7 +96,7 @@
                                 </span>
                             @else
                                 <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gray-700/50 text-gray-300">
-                                    <i data-feather="user" class="w-3 h-3 mr-1"></i> Utilisateur
+                                    <i data-feather="user" class="w-3 h-3 mr-1"></i> User
                                 </span>
                             @endif
                         </div>
@@ -114,7 +104,7 @@
                     <div class="md:col-span-2">
                         <div class="text-sm font-medium text-gray-400 mb-2">Bio</div>
                         <div class="text-white bg-[#191919] px-4 py-3 rounded-lg min-h-[80px]">
-                            {{ $user->bio ?? 'Aucune biographie' }}
+                            {{ $user->bio ?? 'No biography' }}
                         </div>
                     </div>
                 </div>
@@ -126,10 +116,10 @@
             <div class="px-6 py-5 flex justify-between items-center border-b border-gray-800/50">
                 <h3 class="font-semibold text-lg text-white flex items-center">
                     <i data-feather="image" class="w-5 h-5 mr-2 text-green-500"></i>
-                    Publications récentes
+                    Recent Posts
                 </h3>
                 <a href="{{ route('admin.posts.index') }}?user={{ $user->id }}" class="text-green-500 hover:text-green-400 text-sm flex items-center transition-colors">
-                    Voir toutes
+                    View all
                     <i data-feather="chevron-right" class="ml-1 w-4 h-4"></i>
                 </a>
             </div>
@@ -149,7 +139,7 @@
                                         </div>
                                     @endif
                                     <div class="flex-1 min-w-0">
-                                        <div class="font-medium text-white truncate">{{ Str::limit($post->caption, 50) ?: 'Sans légende' }}</div>
+                                        <div class="font-medium text-white truncate">{{ Str::limit($post->caption, 50) ?: 'No caption' }}</div>
                                         <div class="flex items-center gap-3 mt-2">
                                             <span class="inline-flex items-center text-xs text-gray-400">
                                                 <i data-feather="heart" class="w-3 h-3 mr-1 text-red-500"></i> {{ $post->likes->count() }}
@@ -172,7 +162,7 @@
                         <div class="bg-[#191919]/60 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                             <i data-feather="image" class="w-8 h-8 text-gray-600"></i>
                         </div>
-                        <p>Cet utilisateur n'a pas encore publié de contenu.</p>
+                        <p>This user has not posted any content yet.</p>
                     </div>
                 @endif
             </div>
@@ -182,21 +172,21 @@
 
 <div class="flex flex-col md:flex-row md:justify-between gap-4 mt-8">
     <a href="{{ route('admin.users.index') }}" class="inline-flex items-center justify-center px-4 py-2 bg-[#222222] hover:bg-[#333333] text-white font-medium rounded-lg transition-colors">
-        <i data-feather="arrow-left" class="w-4 h-4 mr-2"></i> Retour à la liste
+        <i data-feather="arrow-left" class="w-4 h-4 mr-2"></i> Back to list
     </a>
     <div class="flex flex-col md:flex-row gap-3">
         <form action="{{ route('admin.users.toggle-admin', $user) }}" method="POST">
             @csrf
             <button type="submit" class="inline-flex items-center justify-center w-full px-4 py-2 {{ $user->is_admin ? 'bg-gray-600 hover:bg-gray-700' : 'bg-blue-600 hover:bg-blue-700' }} text-white font-medium rounded-lg transition-colors">
                 <i data-feather="{{ $user->is_admin ? 'user' : 'shield' }}" class="w-4 h-4 mr-2"></i>
-                {{ $user->is_admin ? 'Retirer les droits admin' : 'Faire administrateur' }}
+                {{ $user->is_admin ? 'Remove admin rights' : 'Make administrator' }}
             </button>
         </form>
-        <form action="{{ route('admin.users.destroy', $user) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est irréversible.');" class="w-full md:w-auto">
+        <form action="{{ route('admin.users.destroy', $user) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this user? This action is irreversible.');" class="w-full md:w-auto">
             @csrf
             @method('DELETE')
             <button type="submit" class="inline-flex items-center justify-center w-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors">
-                <i data-feather="trash-2" class="w-4 h-4 mr-2"></i> Supprimer
+                <i data-feather="trash-2" class="w-4 h-4 mr-2"></i> Delete
             </button>
         </form>
     </div>
