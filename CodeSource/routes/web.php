@@ -22,6 +22,7 @@ use App\Http\Controllers\Admin\AdminProfileController;
 Route::get('/blocked', function () {
     return view('auth.blocked');
 })->name('blocked');
+
 Route::get('/', function () {
     return redirect()->route('login');
 });
@@ -34,11 +35,13 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [RegisterController::class, 'register']);
 });
 
-
+// Route de déconnexion 
 Route::middleware('auth')->group(function () {
-    // Déconnexion
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-    
+});
+
+// Routes utilisateur non admin
+Route::middleware(['auth', 'not.admin'])->group(function () {
     // Page d'accueil
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::post('/home/search', [HomeController::class, 'search'])->name('home.search');
@@ -53,7 +56,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
     Route::post('/posts/{post}/share', [PostController::class, 'share'])->name('posts.share');
     Route::delete('/post-images/{image}', [PostController::class, 'destroyImage'])->name('posts.images.destroy');
-
     
     // Likes
     Route::post('/posts/{post}/likes', [LikeController::class, 'store'])->name('likes.store');
@@ -75,24 +77,27 @@ Route::middleware('auth')->group(function () {
     Route::delete('/users/{user}/follow', [FollowController::class, 'destroy'])->name('follow.destroy');
     
     // Notifications
-Route::prefix('notifications')->name('notifications.')->middleware('auth')->group(function () {
-    Route::get('/', [NotificationController::class, 'index'])->name('index');
-    Route::post('/{id}/read', [NotificationController::class, 'markAsRead'])->name('read');
-    Route::post('/read-all', [NotificationController::class, 'markAllAsRead'])->name('read.all');
-    Route::get('/unread-count', [NotificationController::class, 'getUnreadCount'])->name('unread.count');
-    Route::get('/count', [NotificationController::class, 'getUnreadCount'])->name('count'); 
-    Route::get('/filter/{type}', [NotificationController::class, 'filterByType'])->name('filter');
-});
+    Route::prefix('notifications')->name('notifications.')->group(function () {
+        Route::get('/', [NotificationController::class, 'index'])->name('index');
+        Route::post('/{id}/read', [NotificationController::class, 'markAsRead'])->name('read');
+        Route::post('/read-all', [NotificationController::class, 'markAllAsRead'])->name('read.all');
+        Route::get('/unread-count', [NotificationController::class, 'getUnreadCount'])->name('unread.count');
+        Route::get('/count', [NotificationController::class, 'getUnreadCount'])->name('count'); 
+        Route::get('/filter/{type}', [NotificationController::class, 'filterByType'])->name('filter');
+    });
    
     // Recherche
     Route::get('/search', [SearchController::class, 'index'])->name('search');
+    
     // Routes pour les commentaires
     Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
     Route::get('/comments/{comment}/edit', [CommentController::class, 'edit'])->name('comments.edit');
     Route::put('/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
-    //trending
+    
+    // Trending
     Route::get('/trending', [TrendingController::class, 'index'])->name('trending.index');
+});
 
 // Routes pour l'administration
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
@@ -111,10 +116,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     
     // Routes pour les commentaires
     Route::resource('comments', CommentAdminController::class)->only(['index', 'show', 'destroy']);
+    
+    // Profil admin
     Route::get('/profile', [AdminProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [AdminProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/password', [AdminProfileController::class, 'updatePassword'])->name('profile.password.update');
-
-});
-
 });
