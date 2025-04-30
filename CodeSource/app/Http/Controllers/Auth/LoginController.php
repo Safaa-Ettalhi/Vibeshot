@@ -37,7 +37,7 @@ class LoginController extends Controller
         }
 
         throw ValidationException::withMessages([
-            'email' => ['Les informations d\'identification fournies ne correspondent pas à nos enregistrements.'],
+            'email' => ['The credentials provided do not match our records.'],
         ]);
     }
 
