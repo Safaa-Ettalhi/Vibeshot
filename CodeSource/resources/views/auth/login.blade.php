@@ -1,18 +1,13 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="EN">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <title>{{ config('app.name', 'VibeShot') }} - Connexion</title>
-
-    <!-- Fonts -->
+    <title>Sign in</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -73,7 +68,7 @@
                             </span>
                         @enderror
                         
-                        <a href="#" class="text-xs text-gray-500 block text-right mt-2 hover:text-blue-500">
+                        <a href="{{ route('password.request') }}" class="text-xs text-gray-500 block text-right mt-2 hover:text-blue-500">
                             forgot password?
                         </a>
                     </div>
@@ -88,15 +83,13 @@
                 Don't have an account? <a href="{{ route('register') }}" class="text-blue-500 font-medium hover:underline">Sign up</a>
             </div>
         </div>
-        
-        <!-- Image d'arrière-plan -->
+
         <div class="flex-1 bg-cover bg-center relative rounded-l-3xl hidden md:flex" style="background-image: url('{{ asset('images/login-bg.jpg') }}')">
             <div class="absolute bottom-2.5 right-2.5 text-white text-sm opacity-80">Vibeshot</div>
         </div>
     </div>
 
     <script>
-        // Script pour afficher/masquer le mot de passe
         document.addEventListener('DOMContentLoaded', function() {
             const passwordToggle = document.getElementById('password-toggle');
             const passwordInput = document.getElementById('password');
