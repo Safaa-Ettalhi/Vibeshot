@@ -736,6 +736,9 @@ a {
 .publication-action.active {
   color: #3498db;
 }
+.share-btn.active{
+  color:#11c266
+}
 
 .publication-action.liked {
   color: #ff5a5f;
