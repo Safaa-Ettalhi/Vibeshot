@@ -59,147 +59,24 @@
             
             <!-- Posts Feed -->
             <div id="posts-container">
-                @if(count($posts) > 0)
-                    @foreach($posts as $post)
-                        <div class="bg-gray-900/50 rounded-xl overflow-hidden border border-gray-800 shadow-lg mb-6 backdrop-blur-sm transform transition-all duration-300 hover:shadow-blue-900/20 hover:border-gray-700 hover:-translate-y-1">
-                            <div class="p-4 flex items-center justify-between border-b border-gray-800/50">
-                                <a href="{{ route('profile.show', $post->user->username) }}" class="flex items-center gap-3 group">
-                                    <div class="relative">
-                                        <img src="{{ $post->user->profile_image ? asset('storage/' . $post->user->profile_image) : asset('images/default-avatar.svg') }}" alt="{{ $post->user->name }}" class="w-10 h-10 rounded-full object-cover border-2 border-transparent group-hover:border-blue-500 transition-all">
-                                    
-                                    </div>
-                                    <div>
-                                        <div class="flex items-center flex-wrap gap-1">
-                                            <span class="font-semibold text-white group-hover:text-blue-400 transition-colors">{{ $post->user->name }}</span>
-                                            <span class="text-gray-400">{{ '@' . $post->user->username }}</span>
-                                            <span class="text-gray-500 px-1">·</span>
-                                            <span class="text-gray-400 text-sm">{{ App\Helpers\TimeHelper::shortDiffForHumans($post->created_at) }}</span>
-                                        </div>
-                                    </div>
-                                </a>
-                                
-                                @if($post->user_id === auth()->id())
-                                    <div class="relative post-menu">
-                                        <button class="text-gray-400 hover:text-white p-1 rounded-full hover:bg-gray-800/50 transition-colors post-menu-toggle">
-                                            <i class="ri-more-2-fill"></i>
-                                        </button>
-                                        <div class="absolute right-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg z-10 border border-gray-700 overflow-hidden post-menu-dropdown hidden">
-                                            @if(!$post->original_post_id)
-                                                <a href="{{ route('posts.edit', $post) }}" class="block w-full text-left px-4 py-2 text-sm text-white hover:bg-gray-700">Edit Post</a>
-                                            @endif
-                                            <form action="{{ route('posts.destroy', $post) }}" method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-700">Delete Post</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                @endif
-                            </div>
-                            
-                            <div class="p-0">
-                                @if($post->caption)
-                                    <div class="p-4 text-white">{{ $post->caption }}</div>
-                                @endif
-                                
-                                @if($post->images->count() > 1)
-                                    <div class="px-4 pt-1 pb-2">
-                                        <div class="flex space-x-4 overflow-x-auto pb-2 scrollbar-hide">
-                                            @foreach($post->images as $image)
-                                                <div class="flex-none w-[48%] sm:w-[50%] rounded-xl overflow-hidden border border-gray-700/70">
-                                                    <img src="{{ asset('storage/' . $image->image_path) }}" alt="Post image" class="w-full h-auto object-cover aspect-square">
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                @elseif($post->images->count() == 1)
-                                    <div class="px-4 pt-1 pb-2">
-                                        <div class="w-full rounded-xl overflow-hidden border border-gray-700/70">
-                                            <img src="{{ asset('storage/' . $post->images->first()->image_path) }}" alt="Post image" class="w-full h-auto object-cover">
-                                        </div>
-                                    </div>
-                                @elseif($post->image_path)
-                                    <div class="px-4 pt-1 pb-2">
-                                        <div class="w-full rounded-xl overflow-hidden">
-                                            <img src="{{ asset('storage/' . $post->image_path) }}" alt="Post image" class="w-full h-auto object-cover">
-                                        </div>
-                                    </div>
-                                @endif
-                            </div>
-                            
-
-                            <div class="p-4 border-t border-gray-800/50">
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center gap-6">
-                                        @if($post->isLikedBy(auth()->user()))
-                                            <form action="{{ route('likes.destroy', $post) }}" method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="flex items-center gap-1.5 text-red-500 hover:text-red-400 transition-colors group">
-                                                    <i class="ri-heart-fill text-xl group-hover:scale-110 transition-transform"></i>
-                                                    <span class="text-sm font-medium">{{ $post->likes->count() }}</span>
-                                                </button>
-                                            </form>
-                                        @else
-                                            <form action="{{ route('likes.store', $post) }}" method="POST">
-                                                @csrf
-                                                <button type="submit" class="flex items-center gap-1.5 text-gray-400 hover:text-red-500 transition-colors group">
-                                                    <i class="ri-heart-line text-xl group-hover:scale-110 transition-transform"></i>
-                                                    <span class="text-sm font-medium">{{ $post->likes->count() }}</span>
-                                                </button>
-                                            </form>
-                                        @endif
-                                        
-                                        <a href="{{ route('posts.show', $post) }}" class="flex items-center gap-1.5 text-gray-400 hover:text-blue-500 transition-colors group">
-                                            <i class="ri-chat-3-line text-xl group-hover:scale-110 transition-transform"></i>
-                                            
-                                            <span class="text-sm font-medium">{{ $post->comments->count() }}</span>
-                                        </a>
-                                        
-                                        <form action="{{ route('posts.share', $post) }}" method="POST">
-                                            @csrf
-                                            <button type="submit" class="flex items-center gap-1.5 text-gray-400 hover:text-green-500 transition-colors group {{ $post->isSharedBy(auth()->user()) ? 'text-green-500' : '' }}">
-                                                <i class="ri-repeat-line text-xl {{ $post->isSharedBy(auth()->user()) ? 'fill-current' : '' }}"></i>
-                                                <span class="text-sm font-medium">{{ $post->shares->count() }}</span>
-                                            </button>
-                                        </form>
-                                        
-                                        @if($post->isBookmarkedBy(auth()->user()))
-                                            <form action="{{ route('bookmarks.destroy', $post) }}" method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="flex items-center gap-1.5 text-blue-500 hover:text-blue-400 transition-colors group">
-                                                    <i class="ri-bookmark-fill text-xl group-hover:scale-110 transition-transform"></i>
-                                                </button>
-                                            </form>
-                                        @else
-                                            <form action="{{ route('bookmarks.store', $post) }}" method="POST">
-                                                @csrf
-                                                <button type="submit" class="flex items-center gap-1.5 text-gray-400 hover:text-blue-500 transition-colors group">
-                                                    <i class="ri-bookmark-line text-xl group-hover:scale-110 transition-transform"></i>
-                                                </button>
-                                            </form>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                @elseif(isset($searchPerformed) && $searchPerformed)
-                    <div class="bg-gray-900/50 rounded-xl overflow-hidden border border-gray-800 shadow-lg mb-6 backdrop-blur-sm p-8 text-center">
-                        <div class="bg-blue-900/30 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <i class="ri-search-line text-4xl text-blue-500"></i>
-                        </div>
-                        <h3 class="text-xl font-semibold text-white mb-3">No posts found</h3>
-                        <p class="text-gray-400 mb-4 max-w-md mx-auto">We couldn't find any results for "{{ $query }}". Try a different search term or explore other content.</p>
-                        <a href="{{ route('home') }}" class="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-full transition-all transform hover:-translate-y-0.5 shadow-md">
-                            <i class="ri-home-line text-xl"></i>
-                            Back to home
-                        </a>
-                    </div>
-               
-                @endif
+    @if(count($posts) > 0)
+        @foreach($posts as $post)
+            @include('partials.post-card', ['post' => $post])
+        @endforeach
+    @elseif(isset($searchPerformed) && $searchPerformed)
+        <div class="bg-gray-900/50 rounded-xl overflow-hidden border border-gray-800 shadow-lg mb-6 backdrop-blur-sm p-8 text-center">
+            <div class="bg-blue-900/30 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i class="ri-search-line text-4xl text-blue-500"></i>
             </div>
+            <h3 class="text-xl font-semibold text-white mb-3">No posts found</h3>
+            <p class="text-gray-400 mb-4 max-w-md mx-auto">We couldn't find any results for "{{ $query }}". Try a different search term or explore other content.</p>
+            <a href="{{ route('home') }}" class="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-full transition-all transform hover:-translate-y-0.5 shadow-md">
+                <i class="ri-home-line text-xl"></i>
+                Back to home
+            </a>
+        </div>
+    @endif
+</div>
                
         </div>
         
@@ -284,9 +161,9 @@
                             </a>
                             
                             <form action="{{ route('follow.store', $user) }}" method="POST">
-                                @csrf
-                                <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white text-xs font-medium py-1 px-3 rounded-full transition-colors">Follow</button>
-                            </form>
+    @csrf
+    <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white text-xs font-medium py-1 px-3 rounded-full transition-colors follow-btn" data-user-id="{{ $user->id }}">Follow</button>
+</form>
                         </div>
                     @endforeach
                 </div>
@@ -309,6 +186,34 @@
   display: none;
   width: 0;
   height: 0;
+}
+
+.scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.new-shared-post {
+  animation: fadeInDown 0.6s ease-out forwards;
+  transform-origin: top center;
+  opacity: 0;
+}
+
+@keyframes fadeInDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 </style>
 
