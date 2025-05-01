@@ -49,21 +49,21 @@
                 </div>
                 
                 @if($user->id !== auth()->id())
-                    <div class="follow-actions">
-                        @if($isFollowing)
-                            <form action="{{ route('follow.destroy', $user) }}" method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="unfollow-btn ">Unfollow</button>
-                            </form>
-                        @else
-                            <form action="{{ route('follow.store', $user) }}" method="POST">
-                                @csrf
-                                <button type="submit" class="follow-btn ">Follow</button>
-                            </form>
-                        @endif
-                    </div>
-                @endif
+    <div class="follow-actions">
+        @if($isFollowing)
+            <form action="{{ route('follow.destroy', $user) }}" method="POST">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="unfollow-btn follow-btn bg-gray-600 hover:bg-gray-700" data-user-id="{{ $user->id }}">Ne plus suivre</button>
+            </form>
+        @else
+            <form action="{{ route('follow.store', $user) }}" method="POST">
+                @csrf
+                <button type="submit" class="follow-btn bg-blue-500 hover:bg-blue-600" data-user-id="{{ $user->id }}">Suivre</button>
+            </form>
+        @endif
+    </div>
+@endif
             </div>
         </div>
     </div>
@@ -219,51 +219,55 @@
             
             <!-- Post Actions -->
             <div class="publication-actions">
-                @if($post->isLikedBy(auth()->user()))
-                    <form action="{{ route('likes.destroy', $post) }}" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="publication-action liked">
-                            <i class="ri-heart-fill"></i>
-                            <span>{{ $post->likes->count() }}</span>
-                        </button>
-                    </form>
-                @else
-                    <form action="{{ route('likes.store', $post) }}" method="POST">
-                        @csrf
-                        <button type="submit" class="publication-action">
-                            <i class="ri-heart-line"></i>
-                            <span>{{ $post->likes->count() }}</span>
-                        </button>
-                    </form>
-                @endif
+            @if($post->isLikedBy(auth()->user()))
+    <form action="{{ route('likes.destroy', $post) }}" method="POST">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="publication-action liked like-btn" data-post-id="{{ $post->id }}">
+            <i class="ri-heart-fill"></i>
+            <span class="like-count">{{ $post->likes->count() }}</span>
+        </button>
+    </form>
+@else
+    <form action="{{ route('likes.store', $post) }}" method="POST">
+        @csrf
+        <button type="submit" class="publication-action like-btn" data-post-id="{{ $post->id }}">
+            <i class="ri-heart-line"></i>
+            <span class="like-count">{{ $post->likes->count() }}</span>
+        </button>
+    </form>
+@endif
                 
-                <a href="{{ route('posts.show', $post) }}" class="publication-action">
-                    <i class="ri-message-3-line"></i>
-                    <span>{{ $post->comments->count() }}</span>
-                </a>
+<a href="{{ route('posts.show', $post) }}" class="publication-action">
+    <i class="ri-message-3-line"></i>
+    <span class="comment-count-{{ $post->id }}">{{ $post->comments->count() }}</span>
+</a>
                 
-                <a href="" class="publication-action">
-                    <i class="ri-repeat-line"></i>
-                    <span>{{ $post->shares->count() }}</span>
-                </a>
+<form action="{{ route('posts.share', $post) }}" method="POST">
+    @csrf
+    <button type="submit" class="publication-action {{ $post->isSharedBy(auth()->user()) ? 'active ' : '' }} share-btn" data-post-id="{{ $post->id }}">
+        <i class="ri-repeat-line"></i>
+        <span class="share-count">{{ $post->shares->count() }}</span>
+    </button>
+</form>
                 
                 @if($post->isBookmarkedBy(auth()->user()))
-                    <form action="{{ route('bookmarks.destroy', $post) }}" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="publication-action active">
-                            <i class="ri-bookmark-fill"></i>
-                        </button>
-                    </form>
-                @else
-                    <form action="{{ route('bookmarks.store', $post) }}" method="POST">
-                        @csrf
-                        <button type="submit" class="publication-action">
-                            <i class="ri-bookmark-line"></i>
-                        </button>
-                    </form>
-                @endif
+    <form action="{{ route('bookmarks.destroy', $post) }}" method="POST">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="publication-action active bookmark-btn" data-post-id="{{ $post->id }}">
+            <i class="ri-bookmark-fill"></i>
+        </button>
+    </form>
+@else
+    <form action="{{ route('bookmarks.store', $post) }}" method="POST">
+        @csrf
+        <button type="submit" class="publication-action bookmark-btn" data-post-id="{{ $post->id }}">
+            <i class="ri-bookmark-line"></i>
+        </button>
+    </form>
+@endif
+
             </div>
         </div>
     @empty
