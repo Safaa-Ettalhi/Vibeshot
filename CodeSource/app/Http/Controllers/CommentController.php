@@ -24,12 +24,22 @@ class CommentController extends Controller
             $post->user->notify(new NewCommentNotification($post, $comment));
         }
 
+        if ($request->ajax()) {
+            $html = view('partials.comment', compact('comment'))->render();
+            
+            return response()->json([
+                'success' => true,
+                'html' => $html,
+                'count' => $post->comments()->count(),
+                'post_id' => $post->id
+            ]);
+        }
+
         return redirect()->back();
     }
     
     public function update(Request $request, Comment $comment)
     {
-       
         if ($comment->user_id !== auth()->id()) {
             abort(403);
         }
@@ -41,17 +51,32 @@ class CommentController extends Controller
         $comment->content = $request->content;
         $comment->save();
         
-        return redirect()->back()->with('success', 'Comment updated successfully!');
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'content' => $comment->content
+            ]);
+        }
+        
+        return redirect()->back()->with('success', 'Commentaire mis à jour avec succès!');
     }
 
     public function destroy(Comment $comment)
     {
-        
         if ($comment->user_id !== auth()->id()) {
             abort(403);
         }
         
+        $post = $comment->post;
         $comment->delete();
+        
+        if (request()->ajax()) {
+            return response()->json([
+                'success' => true,
+                'count' => $post->comments()->count(),
+                'post_id' => $post->id
+            ]);
+        }
         
         return redirect()->back();
     }
