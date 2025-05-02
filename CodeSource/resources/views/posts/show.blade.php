@@ -136,10 +136,10 @@
             </div>
         @endforeach
         
-        <form action="{{ route('comments.store', $post) }}" method="POST" class="mt-4">
-            @csrf
-            <div class="flex gap-3">
-                <img src="{{ auth()->user()->profile_image ? asset('storage/' . auth()->user()->profile_image) : asset('images/default-avatar.svg') }}" alt="{{ auth()->user()->name }}" class="avatar w-8 h-8">
+        <form action="{{ route('comments.store', $post) }}" method="POST" class="mt-4 comment-form">
+    @csrf
+    <div class="flex gap-3">
+        <img src="{{ auth()->user()->profile_image ? asset('storage/' . auth()->user()->profile_image) : asset('images/default-avatar.svg') }}" alt="{{ auth()->user()->name }}" class="avatar w-8 h-8">
                 <div class="flex-1">
                     <textarea name="content" class="form-control" placeholder="Add a comment..." rows="1" required></textarea>
                     <div class="flex justify-end mt-2">
