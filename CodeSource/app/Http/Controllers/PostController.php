@@ -295,29 +295,58 @@ public function destroyImage(PostImage $image)
     }
     
     public function share(Post $post)
-    {
-        $sharedPost = new Post([
-            'user_id' => auth()->id(),
-            'caption' =>  ($post->caption ?? ''),
-            'image_path' => $post->image_path,
-            'original_post_id' => $post->id 
-        ]);
-        
-        $sharedPost->save();
-        
-        if ($post->images->count() > 0) {
-            $order = 0;
-            foreach ($post->images as $image) {
-                $postImage = new PostImage([
-                    'post_id' => $sharedPost->id,
-                    'image_path' => $image->image_path, 
-                    'order' => $order++
-                ]);
-                
-                $postImage->save();
+{
+    $sharedPost = new Post([
+        'user_id' => auth()->id(),
+        'caption' =>  ($post->caption ?? ''),
+        'image_path' => $post->image_path,
+        'original_post_id' => $post->id 
+    ]);
+    
+    $sharedPost->save();
+    
+    if ($post->images->count() > 0) {
+        $order = 0;
+        foreach ($post->images as $image) {
+            $postImage = new PostImage([
+                'post_id' => $sharedPost->id,
+                'image_path' => $image->image_path, 
+                'order' => $order++
+            ]);
+            
+            $postImage->save();
+        }
+    }
+    $sharesCount = $post->shares()->count();
+    
+    if (request()->ajax()) {
+        $sharedPost->load(['user', 'likes', 'comments', 'images', 'originalPost.user']);
+        $postHtml = view('partials.post-card', ['post' => $sharedPost])->render();
+        $profilePostHtml = view('partials.profile-post-card', ['post' => $sharedPost, 'user' => auth()->user()])->render();
+        $isCurrentUserProfile = false;
+        $referer = request()->headers->get('referer');
+        if ($referer) {
+            $path = parse_url($referer, PHP_URL_PATH);
+            $segments = explode('/', $path);
+            $isProfilePage = count($segments) >= 3 && $segments[1] === 'profile';
+            
+            if ($isProfilePage) {
+                $username = $segments[2];
+                $isCurrentUserProfile = $username === auth()->user()->username;
             }
         }
         
-        return redirect()->route('home')->with('success', 'Post shared successfully!');
+        return response()->json([
+            'success' => true,
+            'count' => $sharesCount,
+            'message' => 'Post shared successfully!',
+            'postHtml' => $postHtml,
+            'profilePostHtml' => $profilePostHtml,
+            'isCurrentUserProfile' => $isCurrentUserProfile
+        ]);
     }
+    
+    return redirect()->route('home')->with('success', 'Post shared successfully!');
+}
+
 }
