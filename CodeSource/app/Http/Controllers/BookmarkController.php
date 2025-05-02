@@ -7,8 +7,6 @@ use Illuminate\Http\Request;
 
 class BookmarkController extends Controller
 {
-
-    
     public function index()
     {
         $bookmarkedPosts = auth()->user()->bookmarks()
@@ -21,7 +19,6 @@ class BookmarkController extends Controller
     
     public function store(Post $post)
     {
-       
         if ($post->bookmarks()->where('user_id', auth()->id())->exists()) {
             return redirect()->back();
         }
@@ -30,12 +27,26 @@ class BookmarkController extends Controller
             'user_id' => auth()->id(),
         ]);
         
+        if (request()->ajax()) {
+            return response()->json([
+                'success' => true,
+                'bookmarked' => true
+            ]);
+        }
+        
         return redirect()->back();
     }
     
     public function destroy(Post $post)
     {
         $post->bookmarks()->where('user_id', auth()->id())->delete();
+        
+        if (request()->ajax()) {
+            return response()->json([
+                'success' => true,
+                'bookmarked' => false
+            ]);
+        }
         
         return redirect()->back();
     }
