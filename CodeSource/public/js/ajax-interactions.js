@@ -311,21 +311,60 @@ document.addEventListener("DOMContentLoaded", () => {
         .then((data) => {
           if (data.success) {
             form.querySelector("textarea").value = ""
-
             const commentCountElements = document.querySelectorAll(`.comment-count-${data.post_id}`)
             commentCountElements.forEach((el) => {
               el.textContent = data.count
             })
-
-            const commentsContainer = document.querySelector(".post-comments")
+            const postElement = form.closest(".card")
+            const commentsContainer = postElement.querySelector(".post-comments")
             if (commentsContainer && data.html) {
-              commentsContainer.insertAdjacentHTML("beforeend", data.html)
+              const tempDiv = document.createElement("div")
+              tempDiv.innerHTML = data.html.trim()
+              const commentElement = tempDiv.firstChild
+              commentsContainer.insertBefore(commentElement, form)
+              initCommentMenu(commentElement)
             }
           }
         })
         .catch((error) => console.error("Erreur:", error))
     })
   })
+  function initCommentMenu(commentElement) {
+    const menuToggle = commentElement.querySelector(".comment-menu-toggle")
+    if (menuToggle) {
+      menuToggle.addEventListener("click", function (e) {
+        e.preventDefault()
+        e.stopPropagation()
+
+        const dropdown = this.closest(".comment-menu").querySelector(".comment-menu-dropdown")
+
+        document.querySelectorAll(".comment-menu-dropdown").forEach((menu) => {
+          if (menu !== dropdown) menu.classList.add("hidden")
+        })
+
+        dropdown.classList.toggle("hidden")
+      })
+
+      const editBtn = commentElement.querySelector(".edit-comment-btn")
+      if (editBtn) {
+        editBtn.addEventListener("click", function () {
+          const commentId = this.getAttribute("data-comment-id")
+          const commentContent = this.getAttribute("data-comment-content")
+
+          this.closest(".comment-menu-dropdown").classList.add("hidden")
+
+          const editCommentForm = document.getElementById("edit-comment-form")
+          const editCommentContent = document.getElementById("edit-comment-content")
+          const editCommentModal = document.getElementById("edit-comment-modal")
+
+          editCommentForm.action = `/comments/${commentId}`
+          editCommentContent.value = commentContent
+
+          editCommentModal.classList.remove("hidden")
+        })
+      }
+    }
+  }
 
   function initPostEvents(postElement) {
     const menuButton = postElement.querySelector(".publication-menu-btn")
