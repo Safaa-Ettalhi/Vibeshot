@@ -15,27 +15,25 @@ class CommentController extends Controller
             'content' => 'required|string|max:1000',
         ]);
 
-        $comment = $post->comments()->create([
+        $comment = new Comment([
             'user_id' => auth()->id(),
+            'post_id' => $post->id,
             'content' => $request->content,
         ]);
 
-        if ($post->user_id !== auth()->id()) {
-            $post->user->notify(new NewCommentNotification($post, $comment));
-        }
-
+        $comment->save();
+        $comment->load('user');
+        
         if ($request->ajax()) {
-            $html = view('partials.comment', compact('comment'))->render();
-            
             return response()->json([
                 'success' => true,
-                'html' => $html,
                 'count' => $post->comments()->count(),
-                'post_id' => $post->id
+                'post_id' => $post->id,
+                'html' => view('partials.comment', ['comment' => $comment])->render()
             ]);
         }
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Commentaire ajouté avec succès!');
     }
     
     public function update(Request $request, Comment $comment)
